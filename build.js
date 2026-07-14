@@ -1,0 +1,156 @@
+//設定環境變數（移除initFunction用的）
+process.env.DISABLE_INIT = "true"; //記得加回來！！！！！！
+
+const fs = require('fs');
+const ejs = require('ejs');
+const path = require('path');
+
+// 測試機 https://stage-www.kiwipin.com/
+const CDN_STAGE = 'https://stage-backend-page.p99pay.com';//
+// const WALLET_CDN_STAGE = '.';//
+// const WALLE_PAGE_STAGE = '.';
+// const WALLE_PAGE_STAGE_T = '.';
+
+// 正式機 https://www.kiwipin.com/
+const CDN_PROD = 'https://backend-page.p99pay.com';
+// const WALLET_CDN_PROD = 'https://wallet.kiwipin.com';
+// const WALLET_PAGE_PROD = 'https://page.kiwipin.com/wallet';
+// const WALLET_PAGE_PROD_T = 'https://page.kiwipin.com/wallet';
+
+//檔案版好參數
+const version = '?v=2026';
+
+// 輸出資料夾
+const viewsDir = path.join(__dirname, 'views');
+const outDirs = {
+  stage: path.join(__dirname, 'dist1_stage'),
+  prod: path.join(__dirname, 'dist2_prod'),
+};
+
+// 定義每個頁面的 metadata
+const pageMeta = {}
+//   'index': {
+//     title: 'KIWIPIN'
+//   },
+//   'product_list': {
+//     title: '購買點數 | KIWIPIN'
+//   },
+//   'point_detail': {
+//     title: '購買點數 | KIWIPIN'
+//   },
+//   'point_add': {
+//     title: '購買點數 | KIWIPIN'
+//   },
+//   'product': {
+//     title: '購買點數 | KIWIPIN'
+//   },
+//   'privacy_policy': {
+//     title: '隱私權政策 | KIWIPIN'
+//   },
+//   'terms_of_service': {
+//     title: '會員服務同意書 | KIWIPIN'
+//   },
+// };
+
+// 確保輸出資料夾存在
+Object.values(outDirs).forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+});
+
+// 讀取 views 裡所有 .ejs 檔案（忽略 layout 資料夾）
+function compileEjsFolder(srcDir, subDir = '') {
+  const files = fs.readdirSync(srcDir)
+    .filter(file => file.endsWith('.ejs') && !file.startsWith('layout/'));
+
+  files.forEach(file => {
+    const templatePath = path.join(srcDir, file);
+    const template = fs.readFileSync(templatePath, 'utf-8');
+    const baseName = path.basename(file, '.ejs');
+    const meta = pageMeta[baseName] || {
+      title: 'p99 Backend'
+    };
+
+    //宣告變數（移除initFunction用的）
+    let processedTemplate = template;
+    if (process.env.DISABLE_INIT === "true") {
+      // 尋找 </head> 的位置
+      const headEndIndex = processedTemplate.indexOf('</head>');
+
+      if (headEndIndex !== -1) {
+        // 拆成 head 和 body 兩部分
+        const headPart = processedTemplate.substring(0, headEndIndex + 7);
+        const bodyPart = processedTemplate.substring(headEndIndex + 7);
+
+        // 只對 body 部分進行 initFunction 的移除
+        const cleanedBody = bodyPart.replace(/initFunction\s*\(\s*\{[\s\S]*?\}\s*\)\s*;?/g, '');
+
+        // 重新拼合
+        processedTemplate = headPart + cleanedBody;
+      }
+    }
+
+    targets.forEach(target => {
+      const outDir = path.join(target.dir, subDir);
+      if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+
+      target.suffixes.forEach((suffix, i) => {
+        // const wallet = target.wallet[i];
+
+        // 跑processedTemplate套用到流程裡（移除initFunction用的）
+        let html = ejs.render(processedTemplate, {
+          cdn: target.cdn,
+          // wallet_cdn: target.wallet_cdn,
+          // wallet: wallet,
+          // title: meta.title,
+          // version: version
+        }, {
+          filename: templatePath,
+          views: [viewsDir]
+        });
+
+        // === 新增：移除 <script> 標籤內的 JavaScript 註釋 ===
+        html = html.replace(/(<script\b[^>]*>)([\s\S]*?)(<\/script>)/gi, (match, openTag, scriptContent, closeTag) => {
+          // 移除單行註釋 // ... (但排除 http:// 或 https:// 這種 URL)
+          // 以及多行註釋 /* ... */
+          const cleanedContent = scriptContent
+            .replace(/\/\*[\s\S]*?\*\//g, '') // 移除 /* 多行註釋 */
+            .replace(/(^|[^:])\/\/.*$/gm, '$1'); // 移除 // 單行註釋（保留 URL 的 //）
+
+          return `${openTag}${cleanedContent}${closeTag}`;
+        });
+        // ============================================
+
+        const outputFileName = `${baseName}${suffix}.html`;
+        const outputFile = path.join(outDir, outputFileName);
+        fs.writeFileSync(outputFile, html);
+        console.log(`✅ 已輸出：${outputFile}`);
+      });
+    });
+  });
+}
+
+// 定義 targets (放在最外層)
+const targets = [
+  {
+    dir: outDirs.stage,
+    suffixes: ['', '-t'],
+    cdn: CDN_STAGE,
+    // wallet_cdn: WALLET_CDN_STAGE,
+    // wallet: [WALLE_PAGE_STAGE, WALLE_PAGE_STAGE_T]
+  },
+  {
+    dir: outDirs.prod,
+    suffixes: ['', '-t'],
+    cdn: CDN_PROD,
+    // wallet_cdn: WALLET_CDN_PROD,
+    // wallet: [WALLET_PAGE_PROD, WALLET_PAGE_PROD_T]
+  }
+];
+
+// 執行編譯：一般頁面
+compileEjsFolder(viewsDir);
+
+// 執行編譯：email_template 資料夾
+// compileEjsFolder(path.join(viewsDir, 'email_template'), 'email_template');

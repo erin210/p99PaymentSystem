@@ -1,0 +1,146 @@
+//color
+:root {
+  --primary: #5581C0;
+  --second: #EFEFEF;
+  --error: #DC8F8F;
+  --bg-image: url('');
+  --bg-image-mobile: url('');
+
+}
+
+$primary:#5581C0; //--primary
+$primary_darken:#203759;
+$primary_lighten:#a4c7e9;
+$primary_gray:#99C5EE;
+$primary_white:#FBFDFF;
+
+$gray_lighten:#F6F8FF;
+$grayBg:#E6EBF8;
+$gray100:#E0E0E0;
+$gray200:#b9c0c4;
+$gray300:#989b9e;
+$gray500:#828284;
+$gray700:#535353;
+
+$white: #fff;
+$dark:#2F2F32;
+$error:#DC8F8F;
+
+
+
+//old
+
+
+$error: #DC8F8F;
+$bg_gray:#F8F8F6;
+$logo_gray:#676767;
+$text_gray2:#8d8c8c;
+$light_gray3:#cbcbcb;
+// $light_gray4: #EFEFEF; //--second
+$light_gray4: #eaeaea; //--second
+$dark-lighten:#252424;
+
+//size
+$infoBoxHeight: 65vh;
+
+//path
+$img-path: '../img/';
+
+//border-radius
+$b-60:60px;
+$b-36:36px;
+$b-24:24px;
+$b-12:12px;
+
+
+
+/* 定義淡入動畫 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* 定義淡出動畫 */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* 定義淡出陰影 */
+@keyframes fadeShadow {
+  from {
+    box-shadow: 0 0 0 rgba($dark, 0);
+    opacity: .3;
+    filter: brightness(1);
+  }
+
+  to {
+    box-shadow: 0 0 10px rgba($dark, .25);
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+}
+
+/* 定義淡出陰影 */
+@keyframes lightMove {
+
+  0%,
+  100% {
+    opacity: 0;
+    top: -100%;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 1;
+    top: 100%;
+  }
+}
+
+
+/* 定義從上往下 */
+@keyframes moveDown {
+  0% {
+    top: 40px;
+    // transform: scaleY(0); 
+    // transform-origin: top; 
+    opacity: 0;
+  }
+
+  100% {
+    top: 80px;
+    // transform: scaleY(1); /* 展開 */
+    opacity: 1;
+    /* 顯示 */
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(-180deg);
+  }
+}
+
+.rotate {
+  img {
+    // border: 1px solid #f00;
+    animation: rotate 0.3s forwards;
+  }
+}

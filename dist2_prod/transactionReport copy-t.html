@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="google" content="notranslate" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<title>P99 BECKEND</title>
+<link rel="icon" href="https://backend-page.p99pay.com/favicon.png">
+<link rel="icon" href="https://backend-page.p99pay.com/favicon.ico">
+<script src="https://backend-page.p99pay.com/assets/js/jquery-3.7.1.min.js"></script>
+
+<link rel="stylesheet" href="https://backend-page.p99pay.com/assets/css/reset.css">
+<link rel="stylesheet" href="https://backend-page.p99pay.com/assets/css/bootstrap-grid.css">
+<link rel="stylesheet" href="https://backend-page.p99pay.com/assets/css/select2.min.css" />
+<link rel="stylesheet" type="text/css" href="https://backend-page.p99pay.com/assets/css/daterangepicker.css" />
+
+<script src="https://backend-page.p99pay.com/assets/js/main.js"></script>
+<script src="https://backend-page.p99pay.com/assets/js/translate.js"></script>
+<script src="https://backend-page.p99pay.com/assets/js/loadingoverlay.min.js"></script>
+<script src="https://backend-page.p99pay.com/assets/js/jquery.sidr.min.js"></script>
+<script src="https://backend-page.p99pay.com/assets/js/shim.min.js"></script>
+<script src="https://backend-page.p99pay.com/assets/js/xlsx.bundle.js"></script>
+<script type="text/javascript" src="https://backend-page.p99pay.com/assets/js/moment.min.js"></script>
+<script type="text/javascript" src="https://backend-page.p99pay.com/assets/js/daterangepicker.min.js"></script>
+
+<link rel="stylesheet" href="https://backend-page.p99pay.com/assets/css/choices.min.css" />
+<script src="https://backend-page.p99pay.com/assets/js/choices.min.js"></script>
+<script src="https://backend-page.p99pay.com/assets/js/pagination.min.js"></script>
+
+<!-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" /> -->
+
+<link rel="stylesheet" href="https://backend-page.p99pay.com/assets/css/p99Backend.css">
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<script>
+    function initFunction(jsonObj) {
+        if (jsonObj && jsonObj.Transaction_Report && jsonObj.Transaction_Report.length > 0) {
+            
+            renderInfo(jsonObj);
+            renderInfo_2(jsonObj);
+            
+            $('.results_area').show(); 
+        } else {
+            renderInfo(jsonObj);
+            
+            
+            $('.results_area').hide(); 
+        }
+    }
+</script>
+</head>
+<body class="walletBody">
+    <div class="whiteBg"></div>
+    <div class="darkBg"></div>
+    <header>
+        <div class="left">
+            <div class="logo imgbox">
+                <img src="https://backend-page.p99pay.com/assets/img/p99_Logo.svg"
+                    alt="">
+            </div>
+            <h5>P99 Payment System</h5>
+            <h4 class="WL_TAB_HISTORY">交易查詢</h4>
+        </div>
+
+        <div class="right">
+            <!-- <div id="langSelect" class="languageBox">
+            <img src="https://backend-page.p99pay.com/assets/img/icon_Globe.svg" alt="" srcset="">
+            <span class="lang_text">語言</span>
+            <ul id="langListItem" class="langListItem">
+                <ul id="landList">
+                <li class="active">
+                    简中
+                </li>
+                <li>
+                    English
+                </li>
+                <li>
+                    日本語
+                </li>
+                <li>
+                    한국어
+                </li>
+                <li>
+                    Tiếng Việt
+                </li>
+                </ul>
+            </ul>
+        </div> -->
+            <div class="user_box">
+                <div><span class="imgbox">
+                        <img src="https://backend-page.p99pay.com/assets/img/User.svg"
+                            alt="">
+                    </span>
+                    <span id="userID">ID??</span>
+                </div>
+                <!-- <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a> -->
+            </div>
+            <div id="menu-toggle" class="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+    </header>
+    <div id="apiWallet">
+
+        <main>
+
+            <aside id="sidr">
+
+                <nav class="tabs">
+                    <div class="tab active">
+                        <a href="history">
+                            <span class="imgbox">
+                                <img src="https://backend-page.p99pay.com/assets/img/icon_FileText.svg"
+                                    alt="">
+                            </span>
+                            <h3><span class="WL_TAB_HISTORY">交易查詢</span></h3>
+                        </a>
+                    </div>
+                    <div class="tab">
+                        <a href="history">
+                            <span class="imgbox">
+                                <img src="https://backend-page.p99pay.com/assets/img/icon_PieChart.svg"
+                                    alt="">
+                            </span>
+                            <h3><span>報表查詢</span></h3>
+                        </a>
+                    </div>
+                    <div class="tab">
+                        <a href="change_password">
+                            <span class="imgbox">
+                                <img src="https://backend-page.p99pay.com/assets/img/icon_Settings.svg"
+                                    alt="">
+                            </span>
+                            <h3><span class="WL_TAB_CHANGE_PASSWORD">設定</span>
+                            </h3>
+                        </a>
+                    </div>
+                </nav>
+                <div class="user_box">
+                    <!-- <div><span class="imgbox">
+                            <img src="https://backend-page.p99pay.com/assets/img/User.svg"
+                                alt="">
+                        </span>
+                        <span id="userID"></span>
+                    </div> -->
+                    <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a>
+                </div>
+            </aside>
+            <div class="tab_container">
+                <!-- <h4 class="WL_TAB_HISTORY">交易查詢</h4> -->
+                <!-- tab_content op-->
+                <div class="tab_content querys_area">
+                    <form id="form" class="form-payment" method="post" 
+                        onsubmit="return searchData();">
+                        <div class="form_list">
+                            <h3 id="MID_NUM">ＭID : <span> - </span></h3>
+                            <div class="input_group">
+                                <div class="input_radio">
+                                    <span>查詢種類：</span>
+                                    <input type="radio" name="searchType"
+                                        id="type01" checked>
+                                    <label for="type01">快速查單</label>
+                                    <input type="radio" name="searchType"
+                                        id="type02">
+                                    <label for="type02">進階查詢</label>
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                <div class="input_item">
+                                    <div class="input_p99">
+                                        <label for="cid-multiple">CID</label>
+                                            <div class="inner_group">
+                                                <select class="form-control"
+                                                    name="cid-multiple"
+                                                    id="cid-multiple" multiple>
+                                                </select>
+                                                <!-- <button type="reset">Reset</button> -->
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                                <div class="input_item">
+                                    <div class="input_p99">
+                                        <label for="">COID</label>
+                                        <input id="U_COID" name="U_COID" type="text" value=""
+                                            placeholder="請輸入COID" inputmode="url" autocomplete="off" autocapitalize="none">
+                                    </div>
+                                </div>
+                                
+                                <div class="input_item hideA">
+                                    <div class="input_p99">
+                                        <label for="status-multiple">交易狀態</label>
+                                        <div class="inner_group">
+                                            <select class="form-control"
+                                                name="status-multiple"
+                                                id="status-multiple" multiple>
+                                            </select>
+                                            <!-- <button type="reset">Reset</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input_group hideA">
+                                <div class="input_radio">
+                                    <span>查詢日期：</span>
+                                    <input type="radio" name="searchDate"
+                                        id="date01" checked>
+                                    <label for="date01">月份</label>
+                                    <input type="radio" name="searchDate"
+                                        id="date02">
+                                    <label for="date02">日期區間</label>
+                                   
+                                </div>
+                            </div>
+                            <div class="input_group hideA">
+                                <div class="input_item hideDateA">
+                                    <div class="input_p99">
+                                        <label for="date-monthly">查詢月份<small> (輸入西元年＋月份)</small></label>
+                                        <div class="input_icon_wrap">
+                                            <input id="date-monthly" name="date-monthly" type="text" value="">
+                                            <!-- <img src="https://backend-page.p99pay.com/assets/img/icon_Calendar.svg"
+                                                    class="input_icon"> -->
+                                         </div>
+                                    </div>
+                                    <small id="ERR_MONTHLY" class="error_msg" style="display: none;">錯誤訊息</small>
+                                </div>
+                                <div class="input_item hideDateB">
+                                    <div class="input_p99">
+                                        <label for="date-range">查詢日期區間 <small> (僅限1個月)</small></label>
+                                        <div class="input_icon_wrap">
+                                            <input type="text" id="date-range"
+                                                name="date-range"
+                                                class="form-control"
+                                                placeholder="請選取日期區間" readonly>
+                                            <img src="https://backend-page.p99pay.com/assets/img/icon_Calendar.svg"
+                                                class="input_icon">
+                                        </div>
+
+                                    </div>
+                                    <!-- <small class="error_msg">查詢日期範圍僅限1個月</small> -->
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                <button type="button" id="search"
+                                    class="btn btn_blue"
+                                    onclick="searchData()"><img
+                                        src="https://backend-page.p99pay.com/assets/img/icon_Search.svg"
+                                        alt="">查單</button>
+                                <!-- <a id="search" href="query">清除</a> -->
+                                <button class="btn btn_blue_outline"
+                                    type="reset" style="width: 5em;">清除</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- tab_content ed-->
+                <!-- tab_content op-->
+                <div class="tab_content results_area">
+                    <div class="form-payment">
+                        <h5>查詢結果</h5>
+                        <!-- <input type="submit" value="Export to XLSX!"> -->
+                        <div class="top_tools">
+                            <p>共 <span id="dataNN"></span> 筆資料，顯示筆數
+                                <select name="" id="pageSIZE" class="select_ss">
+                                </select>
+                            </p>
+                            <button type="submit" id="logOutBTN"
+                                class="btn btn_blue_outline"
+                                onclick="doit('xlsx');"><img
+                                    src="https://backend-page.p99pay.com/assets/img/icon_Download.svg"
+                                    alt="">下載</button>
+                        </div>
+                        <div class="history_list">
+                            <div class="list_PC">
+                                <table id="historyTable">
+                                </table>
+                                <div class="dataEmpty" style="display: none;">
+                                    <img src="https://backend-page.p99pay.com/assets/img/no_data.svg"
+                                        alt="">
+                                    <b class="WL_HISTORY_INFO_EMPTY"></b>
+                                </div>
+                            </div>
+                            <div class="list_M" id="listArea">
+                                <ul>
+                                   <li>測試測試，看我會不會消失</li>
+                                </ul>
+                                <div class="dataEmpty" style="display: none;">
+                                    <img src="https://backend-page.p99pay.com/assets/img/no_data.svg"
+                                        alt="">
+                                    <b class="WL_HISTORY_INFO_EMPTY"></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pagination-container"></div>
+                </div>
+                <!-- tab_content ed-->
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+
+    
+    
+    
+        
+        function renderInfo(json) {
+            
+            $('.results_area').hide(); 
+            $('#userID').text(json.U_ACCOUNT);
+            $('#MID_NUM').text(`MID：${json.MID}`);
+            $('#U_COID').val(json.U_COID);
+
+            
+
+            
+            const defalutInputs={
+                "U_CID":"",
+                "U_YMD_S":"",
+                "U_YMD_E":"",
+                "U_STATUS":""
+            }
+            Object.entries(defalutInputs).forEach(([k, value]) => {
+                
+                if (typeof value === 'object' && value !== null) return;
+                const eleName = `#${k}`;
+                if ($(eleName).length <= 0) {
+                    appendElement_Input('#form', k, value);
+                } else {
+                    $(eleName).val(value);
+                }
+            });
+            
+
+            
+            const cidArray = JSON.parse(json.CID);
+            const ucidString=cidArray.join(',');
+
+            
+            
+            $('#cid-multiple').html('');
+            cidArray.forEach(cid => {
+                const option = `<option value="${cid}" selected>${cid}</option>`;
+                $('#cid-multiple').append(option);
+                
+            });
+
+            
+            $('input[name=U_CID]').val(ucidString);
+            
+
+            
+            const statusMap = {
+                "S": "成功單",
+                "R": "調退單",
+                "F": "失敗單"
+            };
+
+            
+            Object.entries(statusMap).forEach(([key, text]) => {
+                const option = `<option value="${key}">${text}</option>`;
+                $('#status-multiple').append(option);
+            });
+
+            
+            
+            
+                
+            
+            
+            
+            
+
+            
+            if (json.U_STATUS && json.U_STATUS.trim() !== "") {
+                localStorage.setItem('selectedSearchTypeId', 'type02');
+                console.log("進階搜尋");
+                $('#status-multiple').html('');
+                
+                const jsonU_STATUS = json.U_STATUS.split(',');
+
+                
+                const statusObj = Object.keys(statusMap).reduce((acc, key) => {
+                    const text = statusMap[key]; 
+                    acc[key] = text;            
+
+                    
+                    if (jsonU_STATUS.includes(key)) {
+                        
+                        const option = `<option value="${key}" selected>${text}</option>`;
+                        $('#status-multiple').append(option);
+                    } else {
+                        
+                        const option = `<option value="${key}">${text}</option>`;
+                        $('#status-multiple').append(option);
+                    }
+
+                    return acc;
+                }, {});
+            }else{
+                localStorage.setItem('selectedSearchTypeId', 'type01');
+                console.log("快速搜尋");
+            }
+
+            
+        }
+
+        
+        let DataReport = [];
+        function renderInfo_2(json){
+            
+            Object.entries(json).forEach(([k, value]) => {
+                
+                if (typeof value === 'object' && value !== null) return;
+
+                const eleName = `#${k}`;
+                if ($(eleName).length <= 0) {
+                    appendElement_Input('#form', k, value);
+                } else {
+                    
+                    $(eleName).val(value);
+                }
+            });
+
+            
+            DataReport = json.Transaction_Report;
+            
+            const dataNN = json.Transaction_Report.length;
+            $('#dataNN').text(dataNN)
+
+            const historyDATA = json.Transaction_Report 
+            initPagination(10);
+            
+            
+            const pageSizeNumber=[10,20,50,80,100];
+            const pageSelect = $('#pageSIZE');
+
+            pageSelect.innerHTML = '';
+
+            pageSizeNumber.forEach((size, index) => {
+            
+            if (index === 0 || pageSizeNumber[index - 1] < dataNN) {
+                const option = `<option value="${size}">${size}</option>`;
+                pageSelect.append(option);
+            }
+            });
+            
+
+            
+            $('#pageSIZE').on('change', function() {
+                const newSize = $(this).val(); 
+                $('#pagination-container').pagination('destroy');
+
+                
+                initPagination(parseInt(newSize));
+            });
+
+
+            
+            function formatTime(tt) {
+                if (!tt) return ''
+                const [datePart, timePart] = tt.split(' ')
+                const timePartFormate = timePart ? timePart.split('.')[0] : ''
+
+                
+                return `<b>${datePart}</b> <b>${timePartFormate}</b>`
+            }
+
+            
+            function formatCurrency(number) {
+                
+                if (!Number.isInteger(number)) return null
+
+                
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+
+            
+            function initPagination(size) {
+                $('#pagination-container').pagination({
+                    dataSource: historyDATA, 
+                    pageSize: size, 
+                    pageRange: 1, 
+                    showFirstOnEllipsisShow: false, 
+                    showLastOnEllipsisShow: false, 
+                    className: 'paginationjs-theme-blue', 
+
+                    
+                    callback: function(data, pagination) {
+                        
+
+                        
+                        $('#historyTable').empty();
+                        
+                        $('#listArea ul').empty();
+
+                        
+                        const tableTH = `<tr class="list_th">
+                                    <th class="acc_C_COID">COID</th>
+                                    <th class="acc_CustomerName">客戶名稱</th>
+                                    <th class="acc_PAID_NAME">PAID</th>
+                                    <th class="acc_PRODUCT_ID">商品編號</th>
+                                    <th class="acc_PRODUCT_NAME">商品名稱</th>
+                                    <th class="acc_USER_ACCTID">USER ID</th>
+                                    ${ ''}
+                                    <th class="acc_start_date">起單時間(Mock)</th>
+                                    <th class="acc_date">交易時間</th>
+                                    <th class="acc_Reason">原因</th>
+                                    <th class="acc_CUID">幣別</th>
+                                    <th class="acc_AMOUNT">金額</th>
+                                    <th class="acc_PAY_STATUS">交易狀態</th>
+                                    <th class="acc_TOOLS">操作</th>
+                                </tr>
+                                <tr style="height: 10px;"></tr>`;
+                        $('#historyTable').append(tableTH);
+
+                        
+                        data.forEach(item => {
+                            
+
+                            const tableHTML = `<tr>
+                                        <td class="acc_C_COID" t="s">${String(item.C_COID)}</td>
+                                        <td class="acc_CustomerName">${item.CustomerName}</td>
+                                        <td class="acc_PAID_NAME">${item.PAID_NAME}</td>
+                                        <td class="acc_PRODUCT_ID">${item.PRODUCT_ID}</td>
+                                        <td class="acc_PRODUCT_NAME">${item.PRODUCT_NAME}</td>
+                                        <td class="acc_USER_ACCTID">${item.USER_ACCTID ? item.USER_ACCTID : '-'}</td>
+                                        ${ ''}
+                                        <td class="acc_start_date">yyyy-mm-dd 00:00:00</td>
+                                        <td class="acc_date">${item.TransTime ? formatTime(item.TransTime):'-'}</td>
+                                        <td class="acc_Reason">${item.Reason ? item.Reason:'-'}</td>
+                                        <td class="acc_CUID">${item.CUID}</td>
+                                        <td class="acc_AMOUNT">${item.AMOUNT}</td>
+                                        <td class="acc_PAY_STATUS">${item.PAY_STATUS}</td>
+                                        <td class="acc_TOOLS">
+                                            <button>詳細</button>
+                                            <button>重試</button>
+                                            </td>
+                                    </tr>`;
+                            $('#historyTable').append(tableHTML);
+
+                            
+                            
+                            const listINFO_HTML = `
+                                    <li>
+                                    <div class="list_head">
+                                        <div>
+                                        <span class="list_text_left acc_C_COID">COID：${ item.C_COID }</span>
+                                        <span class="list_text_right">
+                                            <i class="imgbox">
+                                            <img src="https://backend-page.p99pay.com/assets/img/icon_dropdown.svg" alt="" />
+                                            </i>
+                                        </span>
+                                        </div>
+                                        <div>
+                                        <span class="list_text_left acc_AMOUNT">${ item.CUID }<b>${item.AMOUNT}</b></span>
+                                       
+                                        </div>
+                                    </div>
+                                    <div class="list_content">
+                                        <div>
+                                            <span class="list_text_left">商品編號</span>
+                                            <span class="list_text_right">${ item.PRODUCT_ID }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">客戶名稱</span>
+                                            <span class="list_text_right">${ item.CustomerName }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">產品名稱</span>
+                                            <span class="list_text_right">${ item.PRODUCT_NAME }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">USER ID</span>
+                                            <span class="list_text_right">${ item.USER_ACCTID ? item.USER_ACCTID : '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">PAID</span>
+                                            <span class="list_text_right">${ item.PAID_NAME }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">交易狀態</span>
+                                            <span class="list_text_right">${ item.PAY_STATUS }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">起單時間</span>
+                                            <span class="list_text_right">${item.CreateTime ? formatTime(item.CreateTime):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">交易時間</span>
+                                            <span class="list_text_right">${item.TransTime ? formatTime(item.TransTime):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">原因</span>
+                                            <span class="list_text_right">${item.Reason ? item.Reason:'-'}</span>
+                                        </div>
+                                        
+                                   </div>
+                                    </li>
+                                    `;
+
+                                $('#listArea ul').append(listINFO_HTML);
+
+                        });
+
+                        
+                        
+                        if (Object.keys(dataNN) === 0) {
+                            $('.dataEmpty').show()
+                            $('.pagination').hide()
+                        } else {
+                            $('.dataEmpty').hide()
+                            $('.pagination').show()
+                        }
+
+                        
+                        $('.list_head').on('click', function() {
+                            $(this).find('.imgbox')
+                                .toggleClass('rotate')
+                            $(this).siblings(
+                                    '.list_content')
+                                .toggleClass('show')
+                        })
+                    }
+                });
+            }
+            
+            
+        }
+
+        
+        function appendElement_Input(ele, name, value) {
+            var inputHtml = `<input type="hidden" id='${name}' name="${name}" value='${value}' />`;
+            $(ele).append(inputHtml);
+            
+        }
+    
+    
+    
+    
+    
+    
+    
+        
+        $(function() {
+            $('#date-range').daterangepicker({
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "separator": " ~ ",
+                    "applyLabel": "確定",
+                    "cancelLabel": "清除",
+                    "fromLabel": "開始日期",
+                    "toLabel": "結束日期",
+                    "customRangeLabel": "自定義區間",
+                    "daysOfWeek": ["日", "一", "二", "三", "四", "五",
+                        "六"
+                    ],
+                    "monthNames": ["一月", "二月", "三月", "四月", "五月",
+                        "六月", "七月", "八月", "九月", "十月", "十一月",
+                        "十二月"
+                    ],
+                    "firstDay": 0
+                },
+                "dateLimit": {
+                    "months": 1 
+                },
+                "startDate": moment().startOf('month'), 
+                "endDate": moment().endOf('month'),   
+                "maxDate": moment(),   
+                "opens": "right" 
+            }, function(start, end, label) {
+                
+                const startTimestamp = start.clone().startOf(
+                    'day').unix();
+
+                
+                const endTimestamp = end.clone().endOf('day')
+                    .unix();
+
+                
+                $('input[name=U_YMD_S]').val(startTimestamp);
+                $('input[name=U_YMD_E]').val(endTimestamp);
+            });
+
+            
+            $('#date-range').on('show.daterangepicker', function(ev, picker) {
+                if ($(window).width() < 768) {
+                    $('body').addClass('modal-open-picker');
+                }
+            });
+
+            $('#date-range').on('hide.daterangepicker', function(ev, picker) {
+                $('body').removeClass('modal-open-picker');
+            });
+
+            
+            $('button[type="reset"]').on('click', function() {
+                setTimeout(() => {
+                    
+                    if ($('#date-range').data('daterangepicker')) {
+                        $('#date-range').data('daterangepicker').setStartDate(moment().startOf('month'));
+                        $('#date-range').data('daterangepicker').setEndDate(moment().endOf('month'));
+                    }
+                    resetInputMonthly();
+
+                }, 0);
+            });
+        });
+
+        
+        $(function() {
+            
+            const currentMonthStr = moment().format('YYYYMM'); 
+            $('#date-monthly').val(currentMonthStr);
+
+            
+            function updateTimestamps(val) {
+                if (!val) return;
+                if (val.length !== 6) return; 
+                const baseDate = moment(val, "YYYYMM");
+                if (!baseDate.isValid()) return;
+
+                const startTimestamp = baseDate.clone().startOf('month').unix();
+                const endTimestamp = baseDate.clone().endOf('month').unix();
+
+                $('input[name=U_YMD_S]').val(startTimestamp);
+                $('input[name=U_YMD_E]').val(endTimestamp);
+            }
+
+            
+            window.updateTimestamps = updateTimestamps; 
+
+            
+            $('#date-monthly').on('input', function() {
+                updateTimestamps($(this).val().trim());
+            });
+
+            
+            updateTimestamps(currentMonthStr);
+        });
+
+        
+        
+        
+        let cidPicker, statusPicker
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            cidPicker = new Choices('#cid-multiple', {
+                removeItemButton: true,
+                allowHTML: true,
+                placeholder: true, 
+                placeholderValue: '＋選取CID', 
+                searchPlaceholderValue: '搜尋...',
+                noChoicesText: '...' 
+                
+            })
+            const uCid = $('input[name=U_CID]');
+            cidPicker.passedElement.element.addEventListener('change',
+                function(event) {
+                    const selectedCid = cidPicker.getValue(true);
+                    uCid.val(selectedCid.join(','));
+
+                    
+                    
+                });
+
+            
+            statusPicker = new Choices('#status-multiple', {
+                removeItemButton: true,
+                allowHTML: true,
+                placeholder: true, 
+                placeholderValue: '＋選取交易狀態，未選為全部', 
+                searchPlaceholderValue: '搜尋...',
+                noChoicesText: '...' 
+                
+            })
+
+            
+            const uStatus = $('input[name=U_STATUS]');
+            
+
+            
+            statusPicker.passedElement.element.addEventListener(
+                'change',
+                function(event) {
+                    
+                    const selectedStatus = statusPicker.getValue(
+                        true);
+
+                    
+                    uStatus.val(selectedStatus.join(','));
+
+                    
+                    
+                });
+
+            
+            const paymentForm = document.querySelector('.form-payment')
+
+            paymentForm.addEventListener('reset', function(e) {
+                
+                setTimeout(() => {
+                    
+                    cidPicker.removeActiveItems() 
+                    cidPicker.setChoiceByValue('') 
+
+                    
+                    statusPicker.removeActiveItems()
+                    statusPicker.setChoiceByValue('')
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+
+                    
+                }, 0)
+            })
+        })
+
+        
+        $(function() {
+            $('input[name="searchType"]').on('change', function() {
+                if ($('#type02').is(':checked')) {
+                    $('.hideA').fadeIn(
+                    300); 
+                } else {
+                    $('.hideA').hide();
+                }
+                
+                resetInputMonthly();
+            });
+        });
+        
+        $(function() {
+            $('input[name="searchDate"]').on('change', function() {
+                if ($('#date02').is(':checked')) {
+                    $('.hideDateB').fadeIn(0);
+                    $('.hideDateA').hide();
+                } else {
+                    $('.hideDateA').fadeIn(300);
+                    $('.hideDateB').hide(0);
+                }
+                
+                resetInputMonthly();
+            });
+        });
+
+        
+        function resetInputMonthly(){
+                    
+                    const currentMonthStr = moment().format('YYYYMM'); 
+                    $('#date-monthly').val(currentMonthStr);
+
+                    
+                    updateTimestamps(currentMonthStr);
+
+                    $('#search').removeClass('disabled').attr('disabled',false);
+
+                    
+                    localStorage.setItem('selectedSearchTypeId', 'type01');
+                    localStorage.setItem('selectedSearchDateId', 'date01');
+                    searchItemOpen();
+        }
+        
+        
+        
+        
+        
+
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        function initRadioStorage(radioName, storageKey) {
+            
+            let savedId = localStorage.getItem(storageKey);
+            
+            if (savedId) {
+                $('#' + savedId).prop('checked', true);
+            }else{
+                localStorage.setItem('selectedSearchTypeId', 'type01');
+                localStorage.setItem('selectedSearchDateId', 'date01');
+                searchItemOpen();
+            }
+
+            $('input[name="' + radioName + '"]').on('change', function() {
+                let currentId = $(this).attr('id');
+                if (currentId) {
+                    localStorage.setItem(storageKey, currentId);
+                }
+            });
+
+            $('form').on('submit', function() {
+                let currentCheckedId = $('input[name="' + radioName + '"]:checked').attr('id');
+                if (currentCheckedId) {
+                    localStorage.setItem(storageKey, currentCheckedId);
+                }
+            });
+
+        }
+
+        
+        function searchItemOpen(){
+            if ($('#type02').is(':checked')) {
+                $('.hideA').show();
+                $('.hideDateB').hide();
+            }else{
+                $('.hideA').hide();
+                $('.hideDateB').hide();
+                $('input[name="U_YMD_S"]').val('');
+                $('input[name="U_YMD_E"]').val('');
+                $('input[name="U_STATUS"]').val('');
+                statusPicker.removeActiveItems();
+                statusPicker.setChoiceByValue('');
+            }
+            if ($('#date02').is(':checked')) {
+                $('.hideDateB').fadeIn(300);
+                $('.hideDateA').hide();
+            } else {
+                $('.hideDateA').fadeIn(300);
+                $('.hideDateB').hide(0);
+            }
+        }
+        
+        
+        
+        
+        const MonthlyValidator = {
+            $input: $('#date-monthly'),
+            $error: $('#ERR_MONTHLY'),
+            get $wrapper() {
+                return this.$input.parents('.input_p99');
+            },
+            regex: /^\d{4}(0[1-9]|1[0-2])$/,
+            $searchBtn:$('#search'),
+
+            
+            isValid() {
+                return this.regex.test(this.$input.val().trim());
+            },
+
+            
+            showError() {
+                this.$error.css('display', 'flex').text('請輸入正確的查詢月份格式，例如：202606 (純數字，4碼西元年+2碼月份)');
+                this.$wrapper.addClass('error_input');
+                this.$input.focus();
+                this.$searchBtn.addClass('disabled').attr('disabled',true);
+            },
+
+            
+            clearError() {
+                this.$error.css('display', 'none').text('');
+                this.$wrapper.removeClass('error_input');
+                this.$searchBtn.removeClass('disabled').attr('disabled',false);
+            }
+        };
+        
+        MonthlyValidator.$input.on('input blur', function() {
+            if (MonthlyValidator.isValid()) {
+                MonthlyValidator.clearError();
+            }else{
+                MonthlyValidator.showError();
+            }
+        });
+
+        
+        function searchData() {
+
+            
+            if (!MonthlyValidator.isValid()) {
+                MonthlyValidator.showError();
+                return false;
+            }
+            
+            
+            $.LoadingOverlay("show", {
+                image: "", 
+                custom: $("<div>", {
+                    class: "custom-spinner"
+                })[0],
+                background: "rgba(255,255,255,0.8)"
+            });
+            
+            document.getElementById('form').submit();
+
+            
+
+            
+            
+            
+        }
+
+    
+    
+    
+
+    
+    $(document).ready(function() {
+        
+        initRadioStorage('searchType', 'selectedSearchTypeId');
+        initRadioStorage('searchDate', 'selectedSearchDateId');
+        searchItemOpen();
+    });
+    
+    
+    function doit(type, fn) {
+        if (!DataReport || DataReport.length === 0) {
+            alert("目前沒有資料可供下載");
+            return;
+        }
+
+        
+        const excelRows = DataReport.map(item => {
+            
+            const rawDate = item.TransTime || "";
+            const cleanDate = rawDate.includes('.') ? rawDate.split(
+                '.')[0] : rawDate;
+
+            return {
+                "客戶名稱": item.CustomerName,
+                "PAID": item.PAID_NAME,
+                "交易狀態": item.PAY_STATUS,
+                "商品編號": item.PRODUCT_ID,
+                "商品名稱": item.PRODUCT_NAME,
+                "ACC": item.USER_ACCTID ? item.USER_ACCTID : '-',
+                "CID": "C001560000156", 
+                "COID": String(item.C_COID), 
+                "交易日期": cleanDate, 
+                "CUID": item.CUID,
+                "金額": item.AMOUNT
+            };
+        });
+
+        
+        var ws = XLSX.utils.json_to_sheet(excelRows);
+
+        
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            
+            const headerAddress = XLSX.utils.encode_cell({
+                r: 0,
+                c: C
+            });
+            if (ws[headerAddress]) {
+                ws[headerAddress].s = {
+                    fill: {
+                        patternType: 'solid',
+                        fgColor: {
+                            rgb: '5581C0'
+                        }
+                    },
+                    font: {
+                        bold: true,
+                        color: {
+                            rgb: 'ffffff'
+                        }
+                    },
+                    alignment: {
+                        horizontal: 'center',
+                        vertical: 'center'
+                    }
+                };
+            }
+
+            
+            for (let R = 1; R <= range.e.r; ++R) {
+                const cellAddress = XLSX.utils.encode_cell({
+                    r: R,
+                    c: C
+                });
+                if (ws[cellAddress]) {
+                    
+                    ws[cellAddress].t = 's';
+                    ws[cellAddress].z = '@';
+                }
+                if (C === 10) { 
+                    ws[cellAddress].s = {
+                        alignment: {
+                            horizontal: 'right', 
+                            vertical: 'center'
+                        }
+                    };
+                } else {
+                    
+                    ws[cellAddress].s = {
+                        alignment: {
+                            horizontal: 'left',
+                            vertical: 'center'
+                        }
+                    };
+                }
+            }
+        }
+
+        
+        ws['!cols'] = [{
+                wch: 20
+            }, 
+            {
+                wch: 15
+            }, 
+            {
+                wch: 12
+            }, 
+            {
+                wch: 15
+            }, 
+            {
+                wch: 20
+            }, 
+            {
+                wch: 15
+            }, 
+            {
+                wch: 20
+            }, 
+            {
+                wch: 25
+            }, 
+            {
+                wch: 20
+            }, 
+            {
+                wch: 15
+            }, 
+            {
+                wch: 12
+            } 
+        ];
+
+        
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "交易明細表");
+        XLSX.writeFile(wb, fn || '交易明細表.' + (type || 'xlsx'));
+    }
+    
+ 
+    </script>
+    <script>
+        
+        
+
+        
+        
+    </script>
+</body>
+
+</html>

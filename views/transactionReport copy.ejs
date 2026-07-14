@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+
+<head>
+<%- include('layout/head') %>
+<script>
+    function initFunction(jsonObj) {
+        if (jsonObj && jsonObj.Transaction_Report && jsonObj.Transaction_Report.length > 0) {
+            // 偵測到json.Transaction_Report
+            renderInfo(jsonObj);
+            renderInfo_2(jsonObj);
+            // 顯示結果區塊
+            $('.results_area').show(); 
+        } else {
+            renderInfo(jsonObj);
+            
+            // 隱藏結果區塊
+            $('.results_area').hide(); 
+        }
+    }
+</script>
+</head>
+<body class="walletBody">
+    <div class="whiteBg"></div>
+    <div class="darkBg"></div>
+    <header>
+        <div class="left">
+            <div class="logo imgbox">
+                <img src="<%- cdn %>/assets/img/p99_Logo.svg"
+                    alt="">
+            </div>
+            <h5>P99 Payment System</h5>
+            <h4 class="WL_TAB_HISTORY">交易查詢</h4>
+        </div>
+
+        <div class="right">
+            <!-- <div id="langSelect" class="languageBox">
+            <img src="<%- cdn %>/assets/img/icon_Globe.svg" alt="" srcset="">
+            <span class="lang_text">語言</span>
+            <ul id="langListItem" class="langListItem">
+                <ul id="landList">
+                <li class="active">
+                    简中
+                </li>
+                <li>
+                    English
+                </li>
+                <li>
+                    日本語
+                </li>
+                <li>
+                    한국어
+                </li>
+                <li>
+                    Tiếng Việt
+                </li>
+                </ul>
+            </ul>
+        </div> -->
+            <div class="user_box">
+                <div><span class="imgbox">
+                        <img src="<%- cdn %>/assets/img/User.svg"
+                            alt="">
+                    </span>
+                    <span id="userID">ID??</span>
+                </div>
+                <!-- <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a> -->
+            </div>
+            <div id="menu-toggle" class="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+    </header>
+    <div id="apiWallet">
+
+        <main>
+
+            <aside id="sidr">
+
+                <nav class="tabs">
+                    <div class="tab active">
+                        <a href="history">
+                            <span class="imgbox">
+                                <img src="<%- cdn %>/assets/img/icon_FileText.svg"
+                                    alt="">
+                            </span>
+                            <h3><span class="WL_TAB_HISTORY">交易查詢</span></h3>
+                        </a>
+                    </div>
+                    <div class="tab">
+                        <a href="history">
+                            <span class="imgbox">
+                                <img src="<%- cdn %>/assets/img/icon_PieChart.svg"
+                                    alt="">
+                            </span>
+                            <h3><span>報表查詢</span></h3>
+                        </a>
+                    </div>
+                    <div class="tab">
+                        <a href="change_password">
+                            <span class="imgbox">
+                                <img src="<%- cdn %>/assets/img/icon_Settings.svg"
+                                    alt="">
+                            </span>
+                            <h3><span class="WL_TAB_CHANGE_PASSWORD">設定</span>
+                            </h3>
+                        </a>
+                    </div>
+                </nav>
+                <div class="user_box">
+                    <!-- <div><span class="imgbox">
+                            <img src="<%- cdn %>/assets/img/User.svg"
+                                alt="">
+                        </span>
+                        <span id="userID"></span>
+                    </div> -->
+                    <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a>
+                </div>
+            </aside>
+            <div class="tab_container">
+                <!-- <h4 class="WL_TAB_HISTORY">交易查詢</h4> -->
+                <!-- tab_content op-->
+                <div class="tab_content querys_area">
+                    <form id="form" class="form-payment" method="post" 
+                        onsubmit="return searchData();">
+                        <div class="form_list">
+                            <h3 id="MID_NUM">ＭID : <span> - </span></h3>
+                            <div class="input_group">
+                                <div class="input_radio">
+                                    <span>查詢種類：</span>
+                                    <input type="radio" name="searchType"
+                                        id="type01" checked>
+                                    <label for="type01">快速查單</label>
+                                    <input type="radio" name="searchType"
+                                        id="type02">
+                                    <label for="type02">進階查詢</label>
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                <div class="input_item">
+                                    <div class="input_p99">
+                                        <label for="cid-multiple">CID</label>
+                                            <div class="inner_group">
+                                                <select class="form-control"
+                                                    name="cid-multiple"
+                                                    id="cid-multiple" multiple>
+                                                </select>
+                                                <!-- <button type="reset">Reset</button> -->
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                                <div class="input_item">
+                                    <div class="input_p99">
+                                        <label for="">COID</label>
+                                        <input id="U_COID" name="U_COID" type="text" value=""
+                                            placeholder="請輸入COID" inputmode="url" autocomplete="off" autocapitalize="none">
+                                    </div>
+                                </div>
+                                
+                                <div class="input_item hideA">
+                                    <div class="input_p99">
+                                        <label for="status-multiple">交易狀態</label>
+                                        <div class="inner_group">
+                                            <select class="form-control"
+                                                name="status-multiple"
+                                                id="status-multiple" multiple>
+                                            </select>
+                                            <!-- <button type="reset">Reset</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input_group hideA">
+                                <div class="input_radio">
+                                    <span>查詢日期：</span>
+                                    <input type="radio" name="searchDate"
+                                        id="date01" checked>
+                                    <label for="date01">月份</label>
+                                    <input type="radio" name="searchDate"
+                                        id="date02">
+                                    <label for="date02">日期區間</label>
+                                   
+                                </div>
+                            </div>
+                            <div class="input_group hideA">
+                                <div class="input_item hideDateA">
+                                    <div class="input_p99">
+                                        <label for="date-monthly">查詢月份<small> (輸入西元年＋月份)</small></label>
+                                        <div class="input_icon_wrap">
+                                            <input id="date-monthly" name="date-monthly" type="text" value="">
+                                            <!-- <img src="<%- cdn %>/assets/img/icon_Calendar.svg"
+                                                    class="input_icon"> -->
+                                         </div>
+                                    </div>
+                                    <small id="ERR_MONTHLY" class="error_msg" style="display: none;">錯誤訊息</small>
+                                </div>
+                                <div class="input_item hideDateB">
+                                    <div class="input_p99">
+                                        <label for="date-range">查詢日期區間 <small> (僅限1個月)</small></label>
+                                        <div class="input_icon_wrap">
+                                            <input type="text" id="date-range"
+                                                name="date-range"
+                                                class="form-control"
+                                                placeholder="請選取日期區間" readonly>
+                                            <img src="<%- cdn %>/assets/img/icon_Calendar.svg"
+                                                class="input_icon">
+                                        </div>
+
+                                    </div>
+                                    <!-- <small class="error_msg">查詢日期範圍僅限1個月</small> -->
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                <button type="button" id="search"
+                                    class="btn btn_blue"
+                                    onclick="searchData()"><img
+                                        src="<%- cdn %>/assets/img/icon_Search.svg"
+                                        alt="">查單</button>
+                                <!-- <a id="search" href="query">清除</a> -->
+                                <button class="btn btn_blue_outline"
+                                    type="reset" style="width: 5em;">清除</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- tab_content ed-->
+                <!-- tab_content op-->
+                <div class="tab_content results_area">
+                    <div class="form-payment">
+                        <h5>查詢結果</h5>
+                        <!-- <input type="submit" value="Export to XLSX!"> -->
+                        <div class="top_tools">
+                            <p>共 <span id="dataNN"></span> 筆資料，顯示筆數
+                                <select name="" id="pageSIZE" class="select_ss">
+                                </select>
+                            </p>
+                            <button type="submit" id="logOutBTN"
+                                class="btn btn_blue_outline"
+                                onclick="doit('xlsx');"><img
+                                    src="<%- cdn %>/assets/img/icon_Download.svg"
+                                    alt="">下載</button>
+                        </div>
+                        <div class="history_list">
+                            <div class="list_PC">
+                                <table id="historyTable">
+                                </table>
+                                <div class="dataEmpty" style="display: none;">
+                                    <img src="<%- cdn %>/assets/img/no_data.svg"
+                                        alt="">
+                                    <b class="WL_HISTORY_INFO_EMPTY"></b>
+                                </div>
+                            </div>
+                            <div class="list_M" id="listArea">
+                                <ul>
+                                   <li>測試測試，看我會不會消失</li>
+                                </ul>
+                                <div class="dataEmpty" style="display: none;">
+                                    <img src="<%- cdn %>/assets/img/no_data.svg"
+                                        alt="">
+                                    <b class="WL_HISTORY_INFO_EMPTY"></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pagination-container"></div>
+                </div>
+                <!-- tab_content ed-->
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+
+    //===============================================
+    //印出DATA op 
+    //===============================================
+        //查詢前/////////////////
+        function renderInfo(json) {
+            
+            $('.results_area').hide(); //查詢結果區塊先隱藏
+            $('#userID').text(json.U_ACCOUNT);
+            $('#MID_NUM').text(`MID：${json.MID}`);
+            $('#U_COID').val(json.U_COID);
+
+            
+
+            //印 hidden input----------------------------
+            const defalutInputs={
+                "U_CID":"",
+                "U_YMD_S":"",
+                "U_YMD_E":"",
+                "U_STATUS":""
+            }
+            Object.entries(defalutInputs).forEach(([k, value]) => {
+                // 過濾掉內層物件
+                if (typeof value === 'object' && value !== null) return;
+                const eleName = `#${k}`;
+                if ($(eleName).length <= 0) {
+                    appendElement_Input('#form', k, value);
+                } else {
+                    $(eleName).val(value);
+                }
+            });
+            
+
+            //CID:讀取＋列印----------------------------            
+            const cidArray = JSON.parse(json.CID);
+            const ucidString=cidArray.join(',');
+
+            // console.log('Cid:'+cidArray);
+            
+            $('#cid-multiple').html('');
+            cidArray.forEach(cid => {
+                const option = `<option value="${cid}" selected>${cid}</option>`;
+                $('#cid-multiple').append(option);
+                
+            });
+
+            //U_CID讀取+input Val
+            $('input[name=U_CID]').val(ucidString);
+            // console.log(ucidString);
+
+            //STATUS:讀取＋列印----------------------------
+            const statusMap = {
+                "S": "成功單",
+                "R": "調退單",
+                "F": "失敗單"
+            };
+
+            //印出option
+            Object.entries(statusMap).forEach(([key, text]) => {
+                const option = `<option value="${key}">${text}</option>`;
+                $('#status-multiple').append(option);
+            });
+
+            
+            //判斷U_COID    
+            // if(json.U_COID || json.U_COID!==""){
+                
+            //     $('#U_COID').val(json.U_COID);
+            //     // localStorage.setItem('selectedSearchDateId', 'date01');
+            //     console.log("有U_COID");
+            // }
+
+            //判斷有無U_STATUS
+            if (json.U_STATUS && json.U_STATUS.trim() !== "") {
+                localStorage.setItem('selectedSearchTypeId', 'type02');
+                console.log("進階搜尋");
+                $('#status-multiple').html('');
+                // 變成陣列：["S", "R"]
+                const jsonU_STATUS = json.U_STATUS.split(',');
+
+                // Object.keys(statusMap) 會拿到 ["S", "R", "F"]
+                const statusObj = Object.keys(statusMap).reduce((acc, key) => {
+                    const text = statusMap[key]; // 拿到 "成功單"、"調退單"、"失敗單"
+                    acc[key] = text;            
+
+                    //檢查判斷
+                    if (jsonU_STATUS.includes(key)) {
+                        // json有
+                        const option = `<option value="${key}" selected>${text}</option>`;
+                        $('#status-multiple').append(option);
+                    } else {
+                        // json沒有
+                        const option = `<option value="${key}">${text}</option>`;
+                        $('#status-multiple').append(option);
+                    }
+
+                    return acc;
+                }, {});
+            }else{
+                localStorage.setItem('selectedSearchTypeId', 'type01');
+                console.log("快速搜尋");
+            }
+
+            // $('#status-multiple').trigger('change');
+        }
+
+        //查詢後/////////////////
+        let DataReport = [];
+        function renderInfo_2(json){
+            //印 hidden input
+            Object.entries(json).forEach(([k, value]) => {
+                // 過濾掉內層object
+                if (typeof value === 'object' && value !== null) return;
+
+                const eleName = `#${k}`;
+                if ($(eleName).length <= 0) {
+                    appendElement_Input('#form', k, value);
+                } else {
+                    
+                    $(eleName).val(value);
+                }
+            });
+
+            
+            DataReport = json.Transaction_Report;
+            
+            const dataNN = json.Transaction_Report.length;
+            $('#dataNN').text(dataNN)//顯示共Ｎ筆
+
+            const historyDATA = json.Transaction_Report // 這裡所有的資料
+            initPagination(10);
+            
+            //顯示筆數option
+            const pageSizeNumber=[10,20,50,80,100];
+            const pageSelect = $('#pageSIZE');
+
+            pageSelect.innerHTML = '';
+
+            pageSizeNumber.forEach((size, index) => {
+            // 第一個選項(10)絕對顯示，其他照計算的顯示
+            if (index === 0 || pageSizeNumber[index - 1] < dataNN) {
+                const option = `<option value="${size}">${size}</option>`;
+                pageSelect.append(option);
+            }
+            });
+            
+
+            //改變顯示筆數
+            $('#pageSIZE').on('change', function() {
+                const newSize = $(this).val(); // 選的數值
+                $('#pagination-container').pagination('destroy');
+
+                // 重新初始化
+                initPagination(parseInt(newSize));
+            });
+
+
+            //日期＋時間 格式
+            function formatTime(tt) {
+                if (!tt) return ''
+                const [datePart, timePart] = tt.split(' ')
+                const timePartFormate = timePart ? timePart.split('.')[0] : ''
+
+                // 在兩個 b 標籤中間加一個真正的空格
+                return `<b>${datePart}</b> <b>${timePartFormate}</b>`
+            }
+
+            //千元標註
+            function formatCurrency(number) {
+                // 確保 number 是一個整數
+                if (!Number.isInteger(number)) return null
+
+                // 將整數轉成字串，並利用正規表達式添加逗號
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+
+            //根據顯示筆數渲染畫面
+            function initPagination(size) {
+                $('#pagination-container').pagination({
+                    dataSource: historyDATA, // 原始完整資料陣列
+                    pageSize: size, // 每頁顯示幾筆
+                    pageRange: 1, // 前後各 2 個，總共約 5 個
+                    showFirstOnEllipsisShow: false, // 不強制顯示第一頁
+                    showLastOnEllipsisShow: false, // 不強制顯示最後一頁
+                    className: 'paginationjs-theme-blue', // 套用藍色主題 (可選)
+
+                    // 切換頁碼
+                    callback: function(data, pagination) {
+                        // PC --------------------------------               
+
+                        //清空表格
+                        $('#historyTable').empty();
+                        //清空list
+                        $('#listArea ul').empty();
+
+                        //表頭
+                        const tableTH = `<tr class="list_th">
+                                    <th class="acc_C_COID">COID</th>
+                                    <th class="acc_CustomerName">客戶名稱</th>
+                                    <th class="acc_PAID_NAME">PAID</th>
+                                    <th class="acc_PRODUCT_ID">商品編號</th>
+                                    <th class="acc_PRODUCT_NAME">商品名稱</th>
+                                    <th class="acc_USER_ACCTID">USER ID</th>
+                                    ${/* <th class="acc_C_COID">COID(Mock)</th> */ ''}
+                                    <th class="acc_start_date">起單時間(Mock)</th>
+                                    <th class="acc_date">交易時間</th>
+                                    <th class="acc_Reason">原因</th>
+                                    <th class="acc_CUID">幣別</th>
+                                    <th class="acc_AMOUNT">金額</th>
+                                    <th class="acc_PAY_STATUS">交易狀態</th>
+                                    <th class="acc_TOOLS">操作</th>
+                                </tr>
+                                <tr style="height: 10px;"></tr>`;
+                        $('#historyTable').append(tableTH);
+
+                        //渲染
+                        data.forEach(item => {
+                            // PC --------------------------------  
+
+                            const tableHTML = `<tr>
+                                        <td class="acc_C_COID" t="s">${String(item.C_COID)}</td>
+                                        <td class="acc_CustomerName">${item.CustomerName}</td>
+                                        <td class="acc_PAID_NAME">${item.PAID_NAME}</td>
+                                        <td class="acc_PRODUCT_ID">${item.PRODUCT_ID}</td>
+                                        <td class="acc_PRODUCT_NAME">${item.PRODUCT_NAME}</td>
+                                        <td class="acc_USER_ACCTID">${item.USER_ACCTID ? item.USER_ACCTID : '-'}</td>
+                                        ${/* <td class="acc_C_COID" t="s"> C001560000156(Mock)</td> */ ''}
+                                        <td class="acc_start_date">yyyy-mm-dd 00:00:00</td>
+                                        <td class="acc_date">${item.TransTime ? formatTime(item.TransTime):'-'}</td>
+                                        <td class="acc_Reason">${item.Reason ? item.Reason:'-'}</td>
+                                        <td class="acc_CUID">${item.CUID}</td>
+                                        <td class="acc_AMOUNT">${item.AMOUNT}</td>
+                                        <td class="acc_PAY_STATUS">${item.PAY_STATUS}</td>
+                                        <td class="acc_TOOLS">
+                                            <button>詳細</button>
+                                            <button>重試</button>
+                                            </td>
+                                    </tr>`;
+                            $('#historyTable').append(tableHTML);
+
+                            // M --------------------------------  
+                            
+                            const listINFO_HTML = `
+                                    <li>
+                                    <div class="list_head">
+                                        <div>
+                                        <span class="list_text_left acc_C_COID">COID：${ item.C_COID }</span>
+                                        <span class="list_text_right">
+                                            <i class="imgbox">
+                                            <img src="<%- cdn %>/assets/img/icon_dropdown.svg" alt="" />
+                                            </i>
+                                        </span>
+                                        </div>
+                                        <div>
+                                        <span class="list_text_left acc_AMOUNT">${ item.CUID }<b>${item.AMOUNT}</b></span>
+                                       
+                                        </div>
+                                    </div>
+                                    <div class="list_content">
+                                        <div>
+                                            <span class="list_text_left">商品編號</span>
+                                            <span class="list_text_right">${ item.PRODUCT_ID }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">客戶名稱</span>
+                                            <span class="list_text_right">${ item.CustomerName }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">產品名稱</span>
+                                            <span class="list_text_right">${ item.PRODUCT_NAME }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">USER ID</span>
+                                            <span class="list_text_right">${ item.USER_ACCTID ? item.USER_ACCTID : '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">PAID</span>
+                                            <span class="list_text_right">${ item.PAID_NAME }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">交易狀態</span>
+                                            <span class="list_text_right">${ item.PAY_STATUS }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">起單時間</span>
+                                            <span class="list_text_right">${item.CreateTime ? formatTime(item.CreateTime):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">交易時間</span>
+                                            <span class="list_text_right">${item.TransTime ? formatTime(item.TransTime):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left">原因</span>
+                                            <span class="list_text_right">${item.Reason ? item.Reason:'-'}</span>
+                                        </div>
+                                        
+                                   </div>
+                                    </li>
+                                    `;
+
+                                $('#listArea ul').append(listINFO_HTML);
+
+                        });
+
+                        //清空list
+                        // $('#listArea').empty();
+                        if (Object.keys(dataNN) === 0) {
+                            $('.dataEmpty').show()
+                            $('.pagination').hide()
+                        } else {
+                            $('.dataEmpty').hide()
+                            $('.pagination').show()
+                        }
+
+                        //看詳細動畫
+                        $('.list_head').on('click', function() {
+                            $(this).find('.imgbox')
+                                .toggleClass('rotate')
+                            $(this).siblings(
+                                    '.list_content')
+                                .toggleClass('show')
+                        })
+                    }
+                });
+            }
+            
+            
+        }
+
+        //批次印出 hidden input
+        function appendElement_Input(ele, name, value) {
+            var inputHtml = `<input type="hidden" id='${name}' name="${name}" value='${value}' />`;
+            $(ele).append(inputHtml);
+            // searchItemOpen();
+        }
+    //===============================================
+    //印出DATA ed 
+    //===============================================
+    
+    //===============================================
+    //查詢區塊op
+    //===============================================
+        //查詢日期區間-daterangepicker
+        $(function() {
+            $('#date-range').daterangepicker({
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "separator": " ~ ",
+                    "applyLabel": "確定",
+                    "cancelLabel": "清除",
+                    "fromLabel": "開始日期",
+                    "toLabel": "結束日期",
+                    "customRangeLabel": "自定義區間",
+                    "daysOfWeek": ["日", "一", "二", "三", "四", "五",
+                        "六"
+                    ],
+                    "monthNames": ["一月", "二月", "三月", "四月", "五月",
+                        "六月", "七月", "八月", "九月", "十月", "十一月",
+                        "十二月"
+                    ],
+                    "firstDay": 0
+                },
+                "dateLimit": {
+                    "months": 1 // 限制區間一個月
+                },
+                "startDate": moment().startOf('month'), // 預設開始：當月 1 號 (例如：2026-06-01)
+                "endDate": moment().endOf('month'),   // 預設結束：當月最後一天 (例如：2026-06-30)
+                "maxDate": moment(),   // 限制最大可選日期：也是當月最後一天
+                "opens": "right" // 選單往右邊彈出
+            }, function(start, end, label) {
+                // 將開始時間歸零到 00:00:00 並轉成 Unix 時間戳記
+                const startTimestamp = start.clone().startOf(
+                    'day').unix();
+
+                // 結束時間推到 23:59:59並轉成 Unix 時間戳記
+                const endTimestamp = end.clone().endOf('day')
+                    .unix();
+
+                // 塞入隱藏欄位
+                $('input[name=U_YMD_S]').val(startTimestamp);
+                $('input[name=U_YMD_E]').val(endTimestamp);
+            });
+
+            // --- 手機版打開時的背景---
+            $('#date-range').on('show.daterangepicker', function(ev, picker) {
+                if ($(window).width() < 768) {
+                    $('body').addClass('modal-open-picker');
+                }
+            });
+
+            $('#date-range').on('hide.daterangepicker', function(ev, picker) {
+                $('body').removeClass('modal-open-picker');
+            });
+
+            //「清除」按鈕
+            $('button[type="reset"]').on('click', function() {
+                setTimeout(() => {
+                    // 原本的 DateRangePicker 重置邏輯
+                    if ($('#date-range').data('daterangepicker')) {
+                        $('#date-range').data('daterangepicker').setStartDate(moment().startOf('month'));
+                        $('#date-range').data('daterangepicker').setEndDate(moment().endOf('month'));
+                    }
+                    resetInputMonthly();
+
+                }, 0);
+            });
+        });
+
+        //查詢月份
+        $(function() {
+            // 網頁開啟時，預設顯示當前月份
+            const currentMonthStr = moment().format('YYYYMM'); 
+            $('#date-monthly').val(currentMonthStr);
+
+            // 核心即時更新邏輯
+            function updateTimestamps(val) {
+                if (!val) return;
+                if (val.length !== 6) return; 
+                const baseDate = moment(val, "YYYYMM");
+                if (!baseDate.isValid()) return;
+
+                const startTimestamp = baseDate.clone().startOf('month').unix();
+                const endTimestamp = baseDate.clone().endOf('month').unix();
+
+                $('input[name=U_YMD_S]').val(startTimestamp);
+                $('input[name=U_YMD_E]').val(endTimestamp);
+            }
+
+            // 變成全域（Global）
+            window.updateTimestamps = updateTimestamps; 
+
+            // 監聽 #date-monthly
+            $('#date-monthly').on('input', function() {
+                updateTimestamps($(this).val().trim());
+            });
+
+            // 3. 第一次自動執行
+            updateTimestamps(currentMonthStr);
+        });
+
+        
+        
+        //清除設定處理/////////////////
+        let cidPicker, statusPicker
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化 CID /////////
+            cidPicker = new Choices('#cid-multiple', {
+                removeItemButton: true,
+                allowHTML: true,
+                placeholder: true, // 啟用提示
+                placeholderValue: '＋選取CID', // 在這裡定義文字
+                searchPlaceholderValue: '搜尋...',
+                noChoicesText: '...' // 當選項選完或無選項時顯示
+                // searchEnabled: false
+            })
+            const uCid = $('input[name=U_CID]');
+            cidPicker.passedElement.element.addEventListener('change',
+                function(event) {
+                    const selectedCid = cidPicker.getValue(true);
+                    uCid.val(selectedCid.join(','));
+
+                    // 測試用
+                    // console.log('隱藏欄位的值:', $('input[name=U_STATUS]').val());
+                });
+
+            // 初始化 Status/////////
+            statusPicker = new Choices('#status-multiple', {
+                removeItemButton: true,
+                allowHTML: true,
+                placeholder: true, // 啟用提示
+                placeholderValue: '＋選取交易狀態，未選為全部', // 在這裡定義文字
+                searchPlaceholderValue: '搜尋...',
+                noChoicesText: '...' // 當選項選完或無選項時顯示
+                // searchEnabled: false
+            })
+
+            // User選取 Status
+            const uStatus = $('input[name=U_STATUS]');
+            // uStatus.val(json.U_STATUS);
+
+            // 監聽 Choices 的變更事件
+            statusPicker.passedElement.element.addEventListener(
+                'change',
+                function(event) {
+                    // 取得目前所有被選中選項的 value 陣列
+                    const selectedStatus = statusPicker.getValue(
+                        true);
+
+                    // 【關鍵修正】在事件觸發時，直接即時抓取隱藏欄位，並用 .val() 寫入
+                    uStatus.val(selectedStatus.join(','));
+
+                    // 測試用
+                    // console.log('當前隱藏欄位的值:', $('input[name=U_STATUS]').val());
+                });
+
+            // --- 清除功能開始 ---
+            const paymentForm = document.querySelector('.form-payment')
+
+            paymentForm.addEventListener('reset', function(e) {
+                // 使用 setTimeout 確保在瀏覽器執行原生 reset 之後才執行 Choices 的清除
+                setTimeout(() => {
+                    // 清除 CID 的 Choices 介面
+                    cidPicker.removeActiveItems() // 移除所有已選標籤
+                    cidPicker.setChoiceByValue('') // 回到預設 Placeholder
+
+                    // 清除 交易狀態 的 Choices 介面
+                    statusPicker.removeActiveItems()
+                    statusPicker.setChoiceByValue('')
+
+                    // 如果有隱藏的結果區塊，也順便藏起來
+                    // const resultsSection = document
+                    //     .getElementById(
+                    //         'results-section')
+                    // if (resultsSection) {
+                    //     resultsSection.style.display =
+                    //         'none'
+                    // }
+                    // 執行清空結果畫面
+                    // clearResults()
+
+                    // console.log('所有欄位已重置')
+                }, 0)
+            })
+        })
+
+        //searchType切換
+        $(function() {
+            $('input[name="searchType"]').on('change', function() {
+                if ($('#type02').is(':checked')) {
+                    $('.hideA').fadeIn(
+                    300); 
+                } else {
+                    $('.hideA').hide();
+                }
+                
+                resetInputMonthly();
+            });
+        });
+        //searchDate切換
+        $(function() {
+            $('input[name="searchDate"]').on('change', function() {
+                if ($('#date02').is(':checked')) {
+                    $('.hideDateB').fadeIn(0);
+                    $('.hideDateA').hide();
+                } else {
+                    $('.hideDateA').fadeIn(300);
+                    $('.hideDateB').hide(0);
+                }
+                
+                resetInputMonthly();
+            });
+        });
+
+        //重設
+        function resetInputMonthly(){
+                    //重置回當月
+                    const currentMonthStr = moment().format('YYYYMM'); 
+                    $('#date-monthly').val(currentMonthStr);
+
+                    //重新計算並同步隱藏欄位的值
+                    updateTimestamps(currentMonthStr);
+
+                    $('#search').removeClass('disabled').attr('disabled',false);
+
+                    //更新stroage
+                    localStorage.setItem('selectedSearchTypeId', 'type01');
+                    localStorage.setItem('selectedSearchDateId', 'date01');
+                    searchItemOpen();
+        }
+        
+        //清除-下方搜尋結果區塊
+        // function clearResults() {
+        //     const resultsSection = $('.results_area')
+        //     if (!resultsSection) return
+
+        //     // A. 隱藏整個區塊
+        //     resultsSection.hide()
+
+        //     // B. 清空表格內容 (避免下次搜尋時舊資料閃現)
+        //     // 假設你的表格 body ID 是 'result-tbody'
+        //     const tbody = document.getElementById('result-tbody')
+        //     if (tbody) {
+        //         tbody.innerHTML = ''
+        //     }
+
+        //     // C. 如果有顯示「共 1256 筆資料」的文字，也把它歸零
+        //     const countText = document.querySelector('.results_header span')
+        //     if (countText) {
+        //         countText.innerText = '查詢結果：共 0 筆資料'
+        //     }
+        // }
+        
+        
+        
+        //切換界面
+        function initRadioStorage(radioName, storageKey) {
+            
+            let savedId = localStorage.getItem(storageKey);
+            
+            if (savedId) {
+                $('#' + savedId).prop('checked', true);
+            }else{
+                localStorage.setItem('selectedSearchTypeId', 'type01');
+                localStorage.setItem('selectedSearchDateId', 'date01');
+                searchItemOpen();
+            }
+
+            $('input[name="' + radioName + '"]').on('change', function() {
+                let currentId = $(this).attr('id');
+                if (currentId) {
+                    localStorage.setItem(storageKey, currentId);
+                }
+            });
+
+            $('form').on('submit', function() {
+                let currentCheckedId = $('input[name="' + radioName + '"]:checked').attr('id');
+                if (currentCheckedId) {
+                    localStorage.setItem(storageKey, currentCheckedId);
+                }
+            });
+
+        }
+
+        //預設區塊開關
+        function searchItemOpen(){
+            if ($('#type02').is(':checked')) {
+                $('.hideA').show();
+                $('.hideDateB').hide();
+            }else{
+                $('.hideA').hide();
+                $('.hideDateB').hide();
+                $('input[name="U_YMD_S"]').val('');
+                $('input[name="U_YMD_E"]').val('');
+                $('input[name="U_STATUS"]').val('');
+                statusPicker.removeActiveItems();
+                statusPicker.setChoiceByValue('');
+            }
+            if ($('#date02').is(':checked')) {
+                $('.hideDateB').fadeIn(300);
+                $('.hideDateA').hide();
+            } else {
+                $('.hideDateA').fadeIn(300);
+                $('.hideDateB').hide(0);
+            }
+        }
+        
+        //即時驗證//////////////////
+        
+        //查詢月份-驗證設定
+        const MonthlyValidator = {
+            $input: $('#date-monthly'),
+            $error: $('#ERR_MONTHLY'),
+            get $wrapper() {
+                return this.$input.parents('.input_p99');
+            },
+            regex: /^\d{4}(0[1-9]|1[0-2])$/,
+            $searchBtn:$('#search'),
+
+            // 檢查格式是否正確
+            isValid() {
+                return this.regex.test(this.$input.val().trim());
+            },
+
+            // 顯示錯誤狀態
+            showError() {
+                this.$error.css('display', 'flex').text('請輸入正確的查詢月份格式，例如：202606 (純數字，4碼西元年+2碼月份)');
+                this.$wrapper.addClass('error_input');
+                this.$input.focus();
+                this.$searchBtn.addClass('disabled').attr('disabled',true);
+            },
+
+            // // 清除錯誤狀態
+            clearError() {
+                this.$error.css('display', 'none').text('');
+                this.$wrapper.removeClass('error_input');
+                this.$searchBtn.removeClass('disabled').attr('disabled',false);
+            }
+        };
+        //查詢月份-驗證執行
+        MonthlyValidator.$input.on('input blur', function() {
+            if (MonthlyValidator.isValid()) {
+                MonthlyValidator.clearError();
+            }else{
+                MonthlyValidator.showError();
+            }
+        });
+
+        //送出查詢資料/////////////////
+        function searchData() {
+
+            //查詢月份-格式驗證
+            if (!MonthlyValidator.isValid()) {
+                MonthlyValidator.showError();
+                return false;
+            }
+            
+            //鎖住畫面
+            $.LoadingOverlay("show", {
+                image: "", // 不用預設圖片
+                custom: $("<div>", {
+                    class: "custom-spinner"
+                })[0],
+                background: "rgba(255,255,255,0.8)"
+            });
+            
+            document.getElementById('form').submit();
+
+            //以下測試用
+
+            // setTimeout(function() {
+            //     document.getElementById('form').submit();
+            // }, 2000); // 2000 毫秒 = 2 秒
+        }
+
+    //===============================================
+    //查詢區塊ed
+    //===============================================
+
+    //判斷讀取的json版本/////////////////
+    $(document).ready(function() {
+        //抓取Storage
+        initRadioStorage('searchType', 'selectedSearchTypeId');
+        initRadioStorage('searchDate', 'selectedSearchDateId');
+        searchItemOpen();
+    });
+    
+    //json to Excel op /////////////////
+    function doit(type, fn) {
+        if (!DataReport || DataReport.length === 0) {
+            alert("目前沒有資料可供下載");
+            return;
+        }
+
+        //根據 HTML 欄位順序進行 map
+        const excelRows = DataReport.map(item => {
+            // 處理日期：直接從原始資料切掉毫秒，確保空格被保留
+            const rawDate = item.TransTime || "";
+            const cleanDate = rawDate.includes('.') ? rawDate.split(
+                '.')[0] : rawDate;
+
+            return {
+                "客戶名稱": item.CustomerName,
+                "PAID": item.PAID_NAME,
+                "交易狀態": item.PAY_STATUS,
+                "商品編號": item.PRODUCT_ID,
+                "商品名稱": item.PRODUCT_NAME,
+                "ACC": item.USER_ACCTID ? item.USER_ACCTID : '-',
+                "CID": "C001560000156", 
+                "COID": String(item.C_COID), // 強制轉字串
+                "交易日期": cleanDate, // ex "2026-03-01 00:20:22"
+                "CUID": item.CUID,
+                "金額": item.AMOUNT
+            };
+        });
+
+        //轉換為工作表
+        var ws = XLSX.utils.json_to_sheet(excelRows);
+
+        //處理格式與底色
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            // --- 設定標題列 (R=0) 樣式 ---
+            const headerAddress = XLSX.utils.encode_cell({
+                r: 0,
+                c: C
+            });
+            if (ws[headerAddress]) {
+                ws[headerAddress].s = {
+                    fill: {
+                        patternType: 'solid',
+                        fgColor: {
+                            rgb: '5581C0'
+                        }
+                    },
+                    font: {
+                        bold: true,
+                        color: {
+                            rgb: 'ffffff'
+                        }
+                    },
+                    alignment: {
+                        horizontal: 'center',
+                        vertical: 'center'
+                    }
+                };
+            }
+
+            // --- 設定內容列 (R>0) 格式 ---
+            for (let R = 1; R <= range.e.r; ++R) {
+                const cellAddress = XLSX.utils.encode_cell({
+                    r: R,
+                    c: C
+                });
+                if (ws[cellAddress]) {
+                    // 強制所有欄位為「文字」類型 (t: 's')
+                    ws[cellAddress].t = 's';
+                    ws[cellAddress].z = '@';
+                }
+                if (C === 10) { // 第 11 欄，索引為 10
+                    ws[cellAddress].s = {
+                        alignment: {
+                            horizontal: 'right', // 靠右對齊
+                            vertical: 'center'
+                        }
+                    };
+                } else {
+                    // 其他欄位預設靠左或置中（可自選）
+                    ws[cellAddress].s = {
+                        alignment: {
+                            horizontal: 'left',
+                            vertical: 'center'
+                        }
+                    };
+                }
+            }
+        }
+
+        // 4. 設定欄位寬度 (根據內容長度稍微調整)
+        ws['!cols'] = [{
+                wch: 20
+            }, // 客戶名稱
+            {
+                wch: 15
+            }, // PAID
+            {
+                wch: 12
+            }, // 交易狀態
+            {
+                wch: 15
+            }, // 商品編號
+            {
+                wch: 20
+            }, // 商品名稱
+            {
+                wch: 15
+            }, // ACC
+            {
+                wch: 20
+            }, // CID
+            {
+                wch: 25
+            }, // COID (最長的欄位)
+            {
+                wch: 20
+            }, // 交易日期
+            {
+                wch: 15
+            }, // CUID
+            {
+                wch: 12
+            } // 金額
+        ];
+
+        // 5. 建立活頁簿並下載
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "交易明細表");
+        XLSX.writeFile(wb, fn || '交易明細表.' + (type || 'xlsx'));
+    }
+    //json to Excel ed /////////////////
+ 
+    </script>
+    <script>
+        //查詢前的資料///////////////
+        // initFunction({"Type":"transactionReport","LanguageList":[],"StringID":[],"MID":"M2000156","CID":"[\"C001560000156\",\"C001560000157\"]"});
+
+        //查詢後的資料///////////////
+        initFunction({"Type":"transactionReport","LanguageList":[],"StringID":[],"U_CID":"C001560000156,C001560000157","U_YMD_S":"1772294400","U_YMD_E":"1774972799","U_STATUS":"S,R","MID":"M2000156","CID":"[\"C001560000156\",\"C001560000157\"]",
+        // "U_COID":"CP12345678","U_ACCOUNT":"jsonID123",
+        "Transaction_Report":[
+            {"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301000826400007","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"23.88","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:20:22.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301000000082689","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"6.92","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:33:07.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301000826700000","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"14.82","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:35:06.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301082690000006","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"17.18","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:40:31.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301000008270004","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"31.13","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:52:40.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301082710000008","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"26.21","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:58:04.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301082710000008","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"26.21","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:58:04.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301082710000008","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"26.21","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:58:04.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301082710000008","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"26.21","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 00:58:04.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301008272000002","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"1.87","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":"","TransTime":"2026-03-01 01:26:17.000000","Reason":null,"C_Settle_TIME":null},{"CustomerName":"NetFusion Technology","PAID_NAME":"VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)","C_COID":"260301082740000001","PAY_STATUS":"\u6210\u529f\u55ae","CUID":"USD","AMOUNT":"1.57","PRODUCT_ID":"LIVE01","PRODUCT_NAME":"LIVE","USER_ACCTID":""}
+        ]});
+    </script>
+</body>
+
+</html>

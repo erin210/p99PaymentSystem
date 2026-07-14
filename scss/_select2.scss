@@ -1,0 +1,81 @@
+.choices__inner .choices__input--cloned {
+    pointer-events: none !important; /* 點擊直接穿透，不會喚起手機鍵盤 */
+    caret-color: transparent !important; /* 隱藏閃爍的輸入游標 */
+}
+
+/* 確保點擊整個框框都能順利打開選單 */
+.choices__inner {
+    cursor: pointer !important;
+}
+
+.input_p99{
+    .choices{
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+    .choices__input{
+        // display: block;
+        margin-bottom: 0;
+        font-size: 14px;
+        cursor: pointer;
+        &.choices__input--cloned{
+            min-width: 50%;
+        // color: $gray100;
+            // border: 1px solid red;
+        }
+        @include breakpoint("xl", "max"){
+            font-size: 12px;
+        
+        }
+        @include m___m{
+            font-size: 14px;
+        }
+    }
+    .choices__inner{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        width: 100%;
+        padding: 0;
+        margin-left: -3px;
+        border: 0;
+        background-color: transparent;
+        min-height:0;
+    }
+   
+    .choices__list--multiple .choices__item{
+        padding: 0 3px 0 8px;
+        margin: 3px;
+        font-size: 12px;
+        line-height: 1.35;
+        @include m___m{
+            padding: 3px 3px 3px 8px;
+            margin: 5px 3px;
+            font-size: 12px;
+        }
+    }
+    .choices__list--multiple .choices__item[data-deletable]{
+        background-color:$primary_lighten;
+        border: 1px solid $primary_gray;
+    }
+    .choices:is([data-type*=select-multiple],[data-type*=text]) .choices__button{
+         width: 12px;
+        padding-left:0;
+        margin-right: 2px;
+        border-left: 0;
+        font-size: 16px;
+        line-height: 1.35;
+        background-size:var(--choices-button-dimension, 10px);
+         @include m___m{
+            font-size: 14px;
+        }
+    }
+    .choices:is([data-type*=select-multiple],[data-type*=text]) .choices__inner{
+        border-radius: 15px;
+    }
+
+    .choices__list.choices__list--dropdown{
+        // position: relative;
+        z-index: 3;
+    }
+}

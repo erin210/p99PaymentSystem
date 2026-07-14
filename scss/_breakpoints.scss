@@ -1,0 +1,73 @@
+@mixin breakpoint($point, $direction: 'max') {
+  // $breakpoints: ('xxs': 375px, // <375px
+  //     'xs': 575.98px, // <576px
+  //     'sm': 767.98px, // <768px
+  //     'md': 991.98px, // <992px
+  //     'lg': 1239.98px, // <1240px
+  //     'xl': 1399.98px, // <1400px
+  //     'xxl': 1400px // >=1400px
+  //   );
+
+    $breakpoints: (
+      'xxs': 374.98px,   // 針對超小手機 (iPhone SE)
+      'xs': 575.98px,    // 手機直向 (Portrait)
+      'sm': 767.98px,    // 手機橫向 / 平板直向
+      'md': 991.98px,    // 平板橫向 / 小筆電 (這裡開始是關鍵)
+      
+      // 修改：將 lg 設在 1199.98px 其實很危險
+      // 如果你怕 1200px 擠壓，lg 應該稍微縮小一點點
+      'lg': 1199.98px,   // 標準筆電邊界 (1200px)
+      
+      'xl': 1399.98px,   // 桌機邊界 (1400px)
+      'xxl': 1599.98px   // 大螢幕 (1600px 以上)
+    );
+
+
+  $width: map-get($breakpoints, $point);
+
+  @if $width {
+    @if $direction=='max' {
+      @media (max-width: $width) {
+        @content;
+      }
+    }
+
+    @else if $direction=='min' {
+      @media (min-width: $width) {
+        @content;
+      }
+    }
+  }
+
+  @else {
+    @warn "Breakpoint '#{$point}' not found in the map!";
+  }
+}
+
+//針對手機版＋手機拿橫的
+@mixin m___m {
+
+  @media screen and (max-width: 767px){
+    @content;
+  }
+}
+// @mixin m___m {
+
+//   @media screen and (max-width: 767px),
+//   screen and (max-device-width: 932px) and (orientation: landscape) {
+//     @content;
+//   }
+// }
+
+//只針對手機拿橫
+@mixin landscape {
+  @media screen and (max-device-width: 932px) and (orientation: landscape) {
+    @content;
+  }
+}
+
+
+//sample
+//@include breakpoint('sm','max'){
+//   background-color: #f00;
+// }

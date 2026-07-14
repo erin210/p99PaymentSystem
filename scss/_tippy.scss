@@ -1,0 +1,13 @@
+/* 自訂 Tippy 提示框的整體外觀 */
+.tippy-box {
+    padding: .5em;
+    background-color: $gray700 !important; /* 整個黑底 */
+    border: 1px solid $gray500 !important; /* 金色邊框 */
+    border-radius: 8px !important;        /* 圓角 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important; /* 陰影 */
+}
+
+.tippy-arrow{
+    color: $gray700 !important;
+}
+

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>查單功能正確流程測試</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
+        .form-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 400px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input[type="text"] { width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        /* 查單按鈕樣式 */
+        .btn_blue { background-color: #007bff; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn_blue:hover { background-color: #0056b3; }
+        
+        /* 表格樣式 */
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+        .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .table th { background-color: #f4f4f4; }
+
+        /* Loading 動畫 CSS */
+        .custom-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <form id="form" action="" method="POST">
+            
+            <div class="form-group">
+                <label for="U_COID">廠商代碼 (U_COID)：</label>
+                <input type="text" id="U_COID" name="U_COID" value="COID_ABC123">
+            </div>
+
+            <div class="form-group" style="background: #fff3cd; padding: 10px; border-radius: 4px;">
+                <label style="color: #856404;">隱藏欄位測試觀察 (U_STATUS)：</label>
+                <input type="text" name="U_STATUS" value="" readonly style="background:#e9ecef; width:95%; padding:5px;">
+            </div>
+
+            <button type="button" id="search" class="btn btn_blue" onclick="searchData()">
+                🔍 查單
+            </button>
+            
+        </form>
+    </div>
+
+    <div id="result-table-container"></div>
+
+
+    <script>
+    // 💡 模擬你前端「原本就手握有的原始資料」
+    const originalJson = {
+        U_STATUS: "S,R" // 假設這是你原本要傳給後端的狀態
+    };
+
+    function searchData() {
+        // 【第一步】在送出前，先把資料準備好塞進 input 欄位！
+        // 這裡就是你之前寫的，確保欄位有值
+        if (originalJson.U_STATUS) {
+            $('input[name="U_STATUS"]').val(originalJson.U_STATUS);
+        }
+
+        // 1. 鎖住畫面，顯示 Loading 動畫
+        $.LoadingOverlay("show", {
+            image: "",  
+            custom: $("<div>", { class: "custom-spinner" })[0],
+            background: "rgba(255,255,255,0.8)"
+        });
+
+        // 2. 自動打包整個表單的資料（此時 formData 裡面已經包含剛才塞進去的 U_STATUS="S,R" 了！）
+        var formData = $('#form').serialize(); 
+        console.log('🚀 [模擬 POST 送出] 表單打包後的封包資料為：', formData);
+        console.log('後端 PHP 現在可以從 $_POST["U_STATUS"] 拿到：', $('input[name="U_STATUS"]').val());
+
+        // 3. 用 setTimeout 延遲 1.5 秒，模擬 AJAX 發送給後端 PHP 的等待時間
+        setTimeout(function() {
+            
+            // 💡 這裡就是模擬後端 PHP 收到你的 "S,R" 之後，去資料庫撈完「回傳給你的 JSON 表格資料」
+            var phpResponseJson = {
+                "list": [
+                    { "order_no": "TX-2026001", "amount": "$1,500", "memo": "對應送出的狀態" },
+                    { "order_no": "TX-2026002", "amount": "$3,200", "memo": "PHP 已成功抓到 hidden 資料" }
+                ]
+            };
+
+            console.log('🎉 [模擬接收成功] 收到後端 PHP 傳回來的查詢結果 JSON：', phpResponseJson);
+
+            // 4. 在同一個網頁動態產生表格
+            var tableHtml = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>訂單編號</th>
+                            <th>金額</th>
+                            <th>後端備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            phpResponseJson.list.forEach(function(item) {
+                tableHtml += `
+                    <tr>
+                        <td>${item.order_no}</td>
+                        <td>${item.amount}</td>
+                        <td>${item.memo}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHtml += '</tbody></table>';
+
+            // 把表格顯示在畫面上
+            $('#result-table-container').html(tableHtml);
+
+            // 5. 關閉 Loading 動畫
+            $.LoadingOverlay("hide");
+            console.log('🏁 同一頁表格渲染完畢！');
+
+        }, 1500); 
+    }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+
+#date-range {
+    cursor: pointer;
+    // background-color: #fff !important;
+    // border: 1px solid #e0e0e0;
+    // border-radius: 4px;
+    // padding: 8px 12px;
+}
+
+/* 讓彈出的日曆顏色符合你的藍色調 */
+.daterangepicker {
+    td.active,
+    td.active:hover {
+        background-color: $primary;
+    }
+    td.off.ends {
+        // visibility: hidden;
+        opacity: .3;
+        pointer-events: none; /* 防止使用者誤點 */
+    }
+
+    .applyBtn {
+        background-color: $primary;
+        border-color: $primary;
+    }
+
+    .cancelBtn {
+        background-color: $gray300;
+        border-color: $gray500;
+        display: none;
+    }
+    
+    
+    &.show-calendar .drp-buttons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        &>.btn {
+            width: 4em;
+        }
+    }
+    @include breakpoint("xs", "max") {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+
+        /* 移除原本套件算出來的滑動動畫和箭頭 */
+        margin-top: 0 !important;
+        border: none !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        z-index: 99999 !important;
+
+        &:before,
+        &:after {
+            display: none !important;
+        }
+
+        .drp-calendar{
+            max-width: 99%;
+            float: inherit;
+        }
+    }
+}
+
+.input_icon_wrap {
+    // display: flex;
+    position: relative;
+    input{
+        position: relative;
+        // border: 1px solid red;
+        z-index: 1;
+    }
+    img {
+        position: absolute;
+        bottom:.5em;
+        right: 0;
+        z-index: 0;
+        width: 1em;
+        
+    }
+}
+@include breakpoint("xs", "max"){
+    body.modal-open-picker::after {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99998;
+    }
+}

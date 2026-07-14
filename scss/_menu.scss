@@ -1,0 +1,221 @@
+.menu-icon {
+  position: relative;
+  // display: none;
+}
+
+.menu-icon span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* 點擊後的動畫 */
+.menu-icon.active span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 5px;
+}
+
+.menu-icon.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-icon.active span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: -6px;
+}
+
+#sidr {
+  .wallet_link {
+    display: none;
+  }
+}
+
+@include breakpoint('lg', 'max') {
+  #sidr {
+    display: none;
+    // width: 100%;
+    height: 0;
+    overflow: hidden;
+    top: -100%;
+
+    .wallet_link {
+      display: block;
+      text-align: center;
+      background-color: #252424;
+
+      a {
+        margin-top: 1em;
+        background-color: transparent !important;
+      }
+    }
+  }
+
+  .menu-icon {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 17px;
+    height: 17px;
+    padding: 5px;
+    padding-left: 14px;
+    border: none;
+    cursor: pointer;
+    z-index: 9999;
+    border-left: 1px solid $gray700;
+    border-color: rgba($color: $primary, $alpha: .35);
+    // box-sizing: border-box;
+
+    &.active {
+      top: 33px;
+      right: 33px;
+      position: fixed;
+      // width: 20px;
+      // height: 20px;
+
+      span {
+        background-color: $white;
+      }
+
+      @include breakpoint("md", "max"){
+      top: 27px;
+      right: 33px;
+        
+      }
+    }
+  }
+
+  #sidr.sidr {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 14px;
+    z-index: 99999;
+    width: calc(100% - 30px);
+    height: auto;
+    margin-top: 2px;
+    padding-top: .5em;
+    font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+    font-size: 15px;
+    background-color: $primary;
+    color: $white;
+    // border: 1px solid #252424;
+    // border: 1px solid #f00;
+    border-radius: 25px;
+    box-sizing: border-box;
+
+    animation: moveDown 0.5s ease-in-out forwards;
+
+    box-shadow: 2px 4px 5px 0px  rgba($color: $primary_darken, $alpha: 0.3);
+
+    // &:before{
+    //   position: fixed;
+    //   top: 0;
+    //   left: 0;
+    //   z-index: -1;
+    //   content: "";
+    //   width: 100vw;
+    //   height: 100vh;
+    //   display: block;
+    //   background-color: rgba($color: #000000, $alpha: 0.5);
+    // }
+    @include breakpoint("md", "max"){
+    margin-top: -8px;
+
+    }
+
+    a {
+      // padding: 1em;
+      // width: 100%;
+      padding: .8em 1em;
+      border-radius: $b-60;
+      // background-color: $dark;
+      @include tran(0.5s, ease);
+
+      &.active {
+        color: $dark;
+        background-color: $white;
+        border-radius: $b-60;
+      }
+
+      // &:hover{
+      //     filter: brightness(3);
+      //     &.active{
+      //         filter: brightness(1);
+      //     }
+      // }
+
+    }
+
+    .sidr-inner {
+      padding: 0 0 15px
+    }
+
+    .sidr-inner>p {
+      margin-left: 15px;
+      margin-right: 15px
+    }
+
+    &.top {
+      top: 0;
+      left: 10px;
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: $dark, $alpha: 0.9);
+  // display: none; /* 預設隱藏 */
+  z-index: 10;
+  /* 高於主內容但低於側邊欄 */
+}
+
+.whiteBg{
+  // display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 50px;
+  // 1. 調整背景色透明度（通常模糊時透明度會設低一點，效果更透亮）
+  background-color: rgba($color: $grayBg, $alpha: 0.5); 
+
+  // 2. 加入玻璃模糊效果
+  // blur 的數值越大越模糊
+  backdrop-filter: blur(5px); 
+
+  // 3. 針對 Safari 瀏覽器的相容性寫法
+  -webkit-backdrop-filter: blur(5px);
+
+}
+
+.darkBg{
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100svh;
+  // 1. 調整背景色透明度（通常模糊時透明度會設低一點，效果更透亮）
+  background-color: rgba($color: $dark, $alpha: 0.5); 
+
+  // 2. 加入玻璃模糊效果
+  // blur 的數值越大越模糊
+  backdrop-filter: blur(8px); 
+
+  // 3. 針對 Safari 瀏覽器的相容性寫法
+  -webkit-backdrop-filter: blur(8px);
+  &.show{
+    display: block;
+  }
+}

@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="google" content="notranslate" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<title>P99 BECKEND</title>
+<link rel="icon" href="https://stage-backend-page.p99pay.com/favicon.png">
+<link rel="icon" href="https://stage-backend-page.p99pay.com/favicon.ico">
+<script src="https://stage-backend-page.p99pay.com/assets/js/jquery-3.7.1.min.js"></script>
+
+<link rel="stylesheet" href="https://stage-backend-page.p99pay.com/assets/css/reset.css">
+<link rel="stylesheet" href="https://stage-backend-page.p99pay.com/assets/css/bootstrap-grid.css">
+<link rel="stylesheet" href="https://stage-backend-page.p99pay.com/assets/css/select2.min.css" />
+<link rel="stylesheet" type="text/css" href="https://stage-backend-page.p99pay.com/assets/css/daterangepicker.css" />
+
+<script src="https://stage-backend-page.p99pay.com/assets/js/main.js"></script>
+<script src="https://stage-backend-page.p99pay.com/assets/js/translate.js"></script>
+<script src="https://stage-backend-page.p99pay.com/assets/js/loadingoverlay.min.js"></script>
+<script src="https://stage-backend-page.p99pay.com/assets/js/jquery.sidr.min.js"></script>
+<script src="https://stage-backend-page.p99pay.com/assets/js/shim.min.js"></script>
+<script src="https://stage-backend-page.p99pay.com/assets/js/xlsx.bundle.js"></script>
+<script type="text/javascript" src="https://stage-backend-page.p99pay.com/assets/js/moment.min.js"></script>
+<script type="text/javascript" src="https://stage-backend-page.p99pay.com/assets/js/daterangepicker.min.js"></script>
+
+<link rel="stylesheet" href="https://stage-backend-page.p99pay.com/assets/css/choices.min.css" />
+<script src="https://stage-backend-page.p99pay.com/assets/js/choices.min.js"></script>
+<script src="https://stage-backend-page.p99pay.com/assets/js/pagination.min.js"></script>
+
+<!-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" /> -->
+
+<link rel="stylesheet" href="https://stage-backend-page.p99pay.com/assets/css/p99Backend.css">
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<script>
+    function initFunction(jsonObj) {
+        if (jsonObj && jsonObj.Transaction_Report) {
+            
+            renderInfo(jsonObj);
+            renderInfo_2(jsonObj);
+            
+            $('.results_area').show(); 
+        } else {
+            renderInfo(jsonObj);
+            
+            
+            $('.results_area').hide(); 
+        }
+    }
+</script>
+</head>
+<body class="walletBody">
+    <div class="whiteBg"></div>
+    <div class="darkBg"></div>
+    <header>
+        <div class="left">
+            <div class="logo imgbox">
+                <img src="https://stage-backend-page.p99pay.com/assets/img/p99_Logo.svg"
+                    alt="">
+            </div>
+            <h5>P99 BACKEND</h5>
+            <h4 class="WL_TAB_HISTORY">交易查詢</h4>
+        </div>
+
+        <div class="right">
+            <!-- <div id="langSelect" class="languageBox">
+            <img src="https://stage-backend-page.p99pay.com/assets/img/icon_Globe.svg" alt="" srcset="">
+            <span class="lang_text">語言</span>
+            <ul id="langListItem" class="langListItem">
+                <ul id="landList">
+                <li class="active">
+                    简中
+                </li>
+                <li>
+                    English
+                </li>
+                <li>
+                    日本語
+                </li>
+                <li>
+                    한국어
+                </li>
+                <li>
+                    Tiếng Việt
+                </li>
+                </ul>
+            </ul> -->
+        </div>
+            <!-- <div class="user_box">
+                <div><span class="imgbox">
+                        <img src="https://stage-backend-page.p99pay.com/assets/img/User.svg"
+                            alt="">
+                    </span>
+                    <span id="userID">ID??</span>
+                </div>
+                <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a>
+            </div> -->
+            <div id="menu-toggle" class="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+    </header>
+    <div id="apiWallet">
+
+        <main>
+
+            <aside id="sidr">
+
+                <nav class="tabs">
+                    <div class="tab active">
+                        <a href="history">
+                            <span class="imgbox">
+                                <img src="https://stage-backend-page.p99pay.com/assets/img/icon_FileText.svg"
+                                    alt="">
+                            </span>
+                            <h3><span class="WL_TAB_HISTORY">交易查詢</span></h3>
+                        </a>
+                    </div>
+                    <!-- <div class="tab">
+                        <a href="history">
+                            <span class="imgbox">
+                                <img src="https://stage-backend-page.p99pay.com/assets/img/icon_PieChart.svg"
+                                    alt="">
+                            </span>
+                            <h3><span>報表查詢</span></h3>
+                        </a>
+                    </div> -->
+                    <!-- <div class="tab">
+                        <a href="change_password">
+                            <span class="imgbox">
+                                <img src="https://stage-backend-page.p99pay.com/assets/img/icon_Settings.svg"
+                                    alt="">
+                            </span>
+                            <h3><span class="WL_TAB_CHANGE_PASSWORD">設定</span>
+                            </h3>
+                        </a>
+                    </div> -->
+                </nav>
+                <div class="user_box">
+                    <!-- <div><span class="imgbox">
+                            <img src="https://stage-backend-page.p99pay.com/assets/img/User.svg"
+                                alt="">
+                        </span>
+                        <span id="userID"></span>
+                    </div> -->
+                    <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a>
+                </div>
+            </aside>
+            <div class="tab_container">
+                <!-- <h4 class="WL_TAB_HISTORY">交易查詢</h4> -->
+                <!-- tab_content op-->
+                <div class="tab_content querys_area">
+                    <form id="form" class="form-payment" method="post" 
+                        onsubmit="return searchData();">
+                        <div class="form_list">
+                            <h3 id="MID_NUM">MID : <span> - </span></h3>
+                            <div class="input_group">
+                                <div class="input_radio">
+                                    <span>查詢種類：</span>
+                                    <input type="radio" name="searchType"
+                                        id="type01" checked>
+                                    <label for="type01">快速查單</label>
+                                    <input type="radio" name="searchType"
+                                        id="type02">
+                                    <label for="type02">進階查詢</label>
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                <div class="input_item input_cid">
+                                    <div class="input_p99">
+                                        <label for="cid-multiple">CID</label>
+                                            <div class="inner_group">
+                                                <select class="form-control"
+                                                    name="cid-multiple"
+                                                    id="cid-multiple" multiple>
+                                                </select>
+                                                <button type="button" class="reset">RESET</button>
+                                            </div>
+                                            
+                                    </div>
+                                    <small id="ERR_CID" class="error_msg" style="display: none;">此欄位必選</small>
+                                </div>
+                                
+                            </div>
+                            <div class="input_group">
+                                <div class="input_item hideB">
+                                    <div class="input_p99">
+                                        <label for="">COID</label>
+                                        <input id="U_COID" name="U_COID" type="text" value=""
+                                            placeholder="請輸入COID" inputmode="url" autocomplete="off" autocapitalize="none">
+                                    </div>
+                                    <small id="ERR_COID" class="error_msg" style="display: none;">請輸入COID</small>
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                 <div class="input_item input_status hideA">
+                                    <div class="input_p99">
+                                        <label for="status-multiple">交易狀態</label>
+                                        <div class="inner_group">
+                                            <select class="form-control"
+                                                name="status-multiple"
+                                                id="status-multiple" multiple>
+                                            </select>
+                                            <!-- <button type="reset">Reset</button> -->
+                                        </div>
+                                        <div class="input_radio input_radio_s">
+                                            <span>日期篩選：</span>
+                                            <input type="radio" name="statusDateType"
+                                                id="status_TransTime" value="T">
+                                            <label for="status_TransTime">交易/調退時間</label>
+                                            <input type="radio" name="statusDateType"
+                                                id="status_CreateTime" value="C">
+                                            <label for="status_CreateTime">起單時間</label>
+                                        
+                                        </div>
+                                    </div>
+                                    <small id="ERR_STATUS" class="error_msg" style="display: none;">此欄位必選</small>
+                                </div>
+                            </div>
+                            <div class="input_group hideA">
+                                <div class="input_radio">
+                                    <span>查詢日期：</span>
+                                    <input type="radio" name="searchDate"
+                                        id="date01" checked>
+                                    <label for="date01">月份</label>
+                                    <input type="radio" name="searchDate"
+                                        id="date02">
+                                    <label for="date02">日期區間</label>
+                                   
+                                </div>
+                            </div>
+                            <div class="input_group hideA">
+                                <div class="input_item hideDateA">
+                                    <div class="input_p99">
+                                        <label for="date-monthly">查詢月份<small> (輸入西元年＋月份)</small></label>
+                                        <div class="input_icon_wrap">
+                                            <input id="date-monthly" name="date-monthly" type="text" value="">
+                                            <!-- <img src="https://stage-backend-page.p99pay.com/assets/img/icon_Calendar.svg"
+                                                    class="input_icon"> -->
+                                         </div>
+                                    </div>
+                                    <small id="ERR_MONTHLY" class="error_msg" style="display: none;">錯誤訊息</small>
+                                </div>
+                                <div class="input_item hideDateB">
+                                    <div class="input_p99">
+                                        <label for="date-range">查詢日期區間 <small> (僅限1個月)</small></label>
+                                        <div class="input_icon_wrap">
+                                            <input type="text" id="date-range"
+                                                name="date-range"
+                                                class="form-control"
+                                                placeholder="請選取日期區間" readonly>
+                                            <img src="https://stage-backend-page.p99pay.com/assets/img/icon_Calendar.svg"
+                                                class="input_icon">
+                                        </div>
+
+                                    </div>
+                                    <!-- <small class="error_msg">查詢日期範圍僅限1個月</small> -->
+                                </div>
+                            </div>
+                            <div class="input_group">
+                                <button type="button" id="search"
+                                    class="btn btn_blue"
+                                    onclick="searchData()"><img
+                                        src="https://stage-backend-page.p99pay.com/assets/img/icon_Search.svg"
+                                        alt="">查單</button>
+                                <!-- <a id="search" href="query">清除</a> -->
+                                <!-- <button class="btn btn_blue_outline"
+                                    type="reset" style="width: 5em;">清除</button> -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- tab_content ed-->
+                <!-- tab_content op-->
+                <div class="tab_content results_area">
+                    <div class="form-payment">
+                        <h5>查詢結果</h5>
+                        <!-- <input type="submit" value="Export to XLSX!"> -->
+                        <div class="top_tools">
+                            <p>共 <span id="dataLength"></span> 筆資料，顯示筆數
+                                <select name="" id="pageSIZE" class="select_ss">
+                                </select>
+                            </p>
+                            <button type="submit" id="logOutBTN"
+                                class="btn btn_blue_outline"
+                                onclick="doit('xlsx');"><img
+                                    src="https://stage-backend-page.p99pay.com/assets/img/icon_Download.svg"
+                                    alt="">下載</button>
+                        </div>
+                        <div class="history_list">
+                            <div class="list_PC">
+                                <table id="historyTable">
+                                </table>
+                                <div class="dataEmpty" style="display: none;">
+                                    <img src="https://stage-backend-page.p99pay.com/assets/img/no_data.svg"
+                                        alt="">
+                                    <b>查無資料</b>
+                                </div>
+                            </div>
+                            <div class="list_M" id="listArea">
+                                <ul>
+                                   <li>測試測試，看我會不會消失</li>
+                                </ul>
+                                <div class="dataEmpty" style="display: none;">
+                                    <img src="https://stage-backend-page.p99pay.com/assets/img/no_data.svg"
+                                        alt="">
+                                    <b>查無資料</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pagination-container"></div>
+                </div>
+                <!-- tab_content ed-->
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+
+
+    
+    
+    
+
+        
+        var statusMap = {
+            "U": "未完成單",
+            "S": "成功單",
+            "R": "調退單",
+            "F": "失敗單"
+        };
+        var u_status_Dafult=["S"];
+        
+        function renderInfo(json) {
+            
+            $('.results_area').hide(); 
+            $('#userID').text(json.U_ACCOUNT);
+            $('#MID_NUM').text(`MID：${json.MID}`);
+            $('#U_COID').val(json.U_COID);
+
+            
+
+            
+            const defalutInputs={
+                "U_CID":"",
+                "U_YMD_S":"",
+                "U_YMD_E":"",
+                "U_STATUS":"",
+                "U_STATUS_DATE":"",
+                "U_ACCOUNT":json.U_ACCOUNT,
+            }
+            
+            
+            Object.entries(defalutInputs).forEach(([k, value]) => {
+                
+                if (typeof value === 'object' && value !== null) return;
+                const eleName = `#${k}`;
+                if ($(eleName).length <= 0) {
+                    appendElement_Input('#form', k, value);
+                } else {
+                    $(eleName).val(value);
+                }
+            });
+
+           statusDateType(json.U_STATUS);
+            
+
+            
+            const cidArray = json.CID;
+            const u_cidString=cidArray.join(',');
+
+            
+            
+            $('#cid-multiple').html('');
+            cidArray.forEach(cid => {
+                const option = `<option value="${cid}" selected>${cid}</option>`;
+                $('#cid-multiple').append(option);
+                
+            });
+
+            
+            $('input[name=U_CID]').val(JSON.stringify(json.CID));
+            $('input[name=U_STATUS]').val(JSON.stringify(json.U_STATUS));
+            
+
+            
+
+            
+            Object.entries(statusMap).forEach(([key, text]) => {
+                
+                const option = `<option value="${key}" ${key === "S" ? "selected" : ""}>${text}</option>`;
+                $('#status-multiple').append(option);
+            });
+
+            
+            
+            
+                
+            
+            
+            
+            
+
+            
+            if (Array.isArray(json.U_STATUS) && json.U_STATUS.length > 0) {
+                localStorage.setItem('selectedSearchTypeId', 'type02');
+                
+                $('#status-multiple').html('');
+                
+                const jsonU_STATUS = json.U_STATUS;
+
+                
+                const statusObj = Object.keys(statusMap).reduce((acc, key) => {
+                    const text = statusMap[key]; 
+                    acc[key] = text;            
+
+                    
+                    if (jsonU_STATUS.includes(key)) {
+                        
+                        const option = `<option value="${key}" selected>${text}</option>`;
+                        $('#status-multiple').append(option);
+                    } else {
+                        
+                        const option = `<option value="${key}">${text}</option>`;
+                        $('#status-multiple').append(option);
+                    }
+
+                    return acc;
+                }, {});
+            }else{
+                localStorage.setItem('selectedSearchTypeId', 'type01');
+                
+            }
+
+            
+            
+        }
+
+        
+        let DataReport = [];
+        function renderInfo_2(json){
+            u_status_Dafult=json.U_STATUS;
+            
+            
+            Object.entries(json).forEach(([k, value]) => {
+                
+                if (typeof value === 'object' && value !== null) return;
+
+                const eleName = `#${k}`;
+                if ($(eleName).length <= 0) {
+                    appendElement_Input('#form', k, value);
+                } else {
+                    
+                    $(eleName).val(value);
+                }
+            });
+
+            
+            DataReport = json.Transaction_Report;
+            
+            const dataLength = DataReport.length;
+            
+            $('#dataLength').text(dataLength)
+
+            
+            
+
+            
+                
+            
+
+            
+            
+            initPagination(10);
+            
+            const pageSizeNumber=[10,20,50,80,100];
+            const pageSelect = $('#pageSIZE');
+            
+
+            pageSelect.innerHTML = '';
+
+            pageSizeNumber.forEach((size, index) => {
+            
+            if (index === 0 || pageSizeNumber[index - 1] < dataLength) {
+                const option = `<option value="${size}">${size}</option>`;
+                pageSelect.append(option);
+            }
+            });
+            
+
+            
+            $('#pageSIZE').on('change', function() {
+                const newSize = $(this).val(); 
+                $('#pagination-container').pagination('destroy');
+
+                
+                initPagination(parseInt(newSize));
+            });
+
+            
+            
+            
+            
+                
+            
+            
+            
+            
+            
+
+            
+            
+            
+
+            
+            
+
+            
+            function formatCurrency(number) {
+                
+                if (!Number.isInteger(number)) return null
+
+                
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+
+            
+            function initPagination(size) {
+                $('#pagination-container').pagination({
+                    dataSource: DataReport, 
+                    pageSize: size, 
+                    pageRange: 1, 
+                    showFirstOnEllipsisShow: false, 
+                    showLastOnEllipsisShow: false, 
+                    className: 'paginationjs-theme-blue', 
+
+                    
+                    callback: function(data, pagination) {
+                        
+                        
+                        $('#historyTable').empty();
+                        
+                        $('#listArea ul').empty();
+
+                        
+                        const tableTH = `<tr class="list_th">
+                                    <th class="acc_SN">NO.</th>
+                                    <th class="acc_CID">CID</th>
+                                    <th class="acc_COID">COID</th>
+                                    ${ ''}
+                                    <th class="acc_PRODUCT_ID">PRODUCT ID</th>
+                                    <th class="acc_PRODUCT_NAME">PRODUCT NAME</th>
+                                    ${ ''}
+                                    ${ ''}
+                                    ${ ''}
+                                    <th class="acc_date">Create Time</th>
+                                    <th class="acc_date">Transaction Time</th>
+                                    <th class="acc_date">Refund Time</th>
+                                    <th class="acc_REMARKS">REMARKS</th>
+                                    <th class="acc_PAY_STATUS">Status</th>
+                                    <th class="acc_CUID">CUID</th>
+                                    <th class="acc_AMOUNT">Amount</th>
+                                    <th class="acc_DETAIL">#</th>
+                                </tr>
+                                <tr style="height: 10px;"></tr>`;
+                        $('#historyTable').append(tableTH);
+
+                        
+                        data.forEach((item,index) => {
+                            
+                            const realIndex = (pagination.pageNumber - 1) * pagination.pageSize + index;
+                            
+
+                            const tableHTML = `<tr>
+                                        <td class="acc_SN" t="s">${realIndex + 1}</td>
+                                        <td class="acc_CID" t="s">${item.CID ? String(item.CID):'-'}</td>
+                                        <td class="acc_COID" t="s">${String(item.COID)}</td>
+                                        <td class="acc_PRODUCT_ID">${item.PRODUCT_ID || '-'}</td>
+                                        <td class="acc_PRODUCT_NAME">${item.PRODUCT_NAME || '-'}</td>
+                                        <td class="acc_date">${item.CreateTime_at_Create ? formatTime(item.CreateTime_at_Create):'-'}</td>
+                                        <td class="acc_date">${item.CreateTime_at_Transaction ? formatTime(item.CreateTime_at_Transaction):'-'}</td>
+                                        <td class="acc_date">${item.CreateTime_at_Refund ? formatTime(item.CreateTime_at_Refund):'-'}</td>
+                                        <td class="acc_REMARKS">${item.REMARKS || '-'}</td>
+                                        <td class="acc_PAY_STATUS">${statusString(item.PAY_STATUS, item.COID)}
+                                        </td>
+                                        <td class="acc_CUID">${item.CUID || '-'}</td>
+                                        <td class="acc_AMOUNT">${item.AMOUNT || '-'}</td>
+                                        <td class="acc_DETAIL">
+                                           <button type="button" class="btn btn_blue btn-detail" data-id="${item.COID || '-'}">Detail</button>
+                                            </td>
+                                    </tr>`;
+                            $('#historyTable').append(tableHTML);
+
+
+
+                            
+                            
+                            const listINFO_HTML = `
+                                    <li>
+                                    <div class="list_head">
+                                        <div>
+                                        <span class="list_text_left acc_CID">CID: ${ item.CID || '-' }</span>
+                                        <span class="list_text_right">
+                                            <i class="imgbox">
+                                            <img src="https://stage-backend-page.p99pay.com/assets/img/icon_dropdown.svg" alt="" />
+                                            </i>
+                                        </span>
+                                        </div>
+                                        <div>
+                                        <span class="list_text_left acc_COID">COID: ${ item.COID || '-' }</span>
+                                        <span class="list_text_left acc_AMOUNT">${ item.CUID || '-' }<b>${item.AMOUNT || '-'}</b></span>
+                                       
+                                        </div>
+                                    </div>
+                                    <div class="list_content">
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">MID: ${ item.MID || '-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">CID NAME: ${ item.CID_NAME || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">P99 COID: ${ item.P99_COID || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">PRODUCT ID: ${ item.PRODUCT_ID || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">PRODUCT NAME: ${ item.PRODUCT_NAME || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">USER ID: ${ item.USER_ACCTID || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">USER IP: ${ item.USER_IP || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">PAID: ${ item.PAID || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">PAID NAME: ${ item.PAID_NAME || '-' }</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right acc_PAY_STATUS">
+                                                Status: ${statusString(item.PAY_STATUS, item.COID)}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">Create Time: ${item.CreateTime_at_Create ? formatTime(item.CreateTime_at_Create):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">Transaction Time: ${item.CreateTime_at_Transaction ? formatTime(item.CreateTime_at_Transaction):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">Refund Time: ${item.CreateTime_at_Refund ? formatTime(item.CreateTime_at_Refund):'-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">REMARKS: ${item.REMARKS || '-'}</span>
+                                        </div>
+                                        <div>
+                                            <span class="list_text_left"></span>
+                                            <span class="list_text_right">TXTIME: ${item.TXTIME || '-'}</span>
+                                        </div>
+                                   </div>
+                                    </li>
+                                    `;
+
+                                $('#listArea ul').append(listINFO_HTML);
+
+                        });
+
+
+                        
+                        if (window.innerWidth > 768) {
+
+                            tippy('.btn-detail', {
+                                allowHTML: true,     
+                                interactive: true,   
+                                placement: 'left',
+                                
+                                
+                                content(reference) {
+                                    
+                                    const coid = reference.getAttribute('data-id');
+                                    
+                                    
+                                    
+                                    const data = DataReport.find(item => String(item.COID) === coid);
+                                    
+                                    if (!data) return '找不到資料';
+
+                                    
+                                    
+                                    return `
+                                        <div class="pc_data_detail">
+                                            <div><small class="left">MID：</small><small class="right">${data.MID || '-'}</small></div>
+                                            <div><small class="left">CID NAME：</small><small class="right">${data.CID_NAME || '-'}</small></div>
+                                            <div><small class="left">P99 COID：</small><small class="right">${data.P99_COID || '-'}</small></div>
+                                            <div><small class="left">USER ID：</small><small class="right">${data.USER_ACCTID || '-'}</small></div>
+                                            <div><small class="left">USER IP：</small><small class="right">${data.USER_IP || '-'}</small></div>
+                                            <div><small class="left">PAID：</small><small class="right">${data.PAID || '-'}</small></div>
+                                            <div><small class="left">PAID_NAME：</small><small class="right">${data.PAID_NAME || '-'}</small></div>
+                                            <div><small class="left">TXTIME：</small><small class="right">${data.TXTIME || '-'}</small></div>
+                                        </div>
+                                    `;
+                                }
+                            });
+
+                        }
+                        
+                        
+                        if (dataLength === 0) {
+                            $('.dataEmpty').show();
+                            $('.top_tools').hide();
+                            $('#pagination-container').hide();
+                            $('#historyTable').hide();
+                        } else {
+                            $('.dataEmpty').hide();
+                            $('.top_tools').show();
+                            $('#pagination-container').show();
+                            $('#historyTable').show();
+                        }
+
+                        
+                        $('.list_head').on('click', function() {
+                            $(this).find('.imgbox')
+                                .toggleClass('rotate')
+                            $(this).siblings(
+                                    '.list_content')
+                                .toggleClass('show')
+                        })
+
+                        
+                        $('.btn-retry').on('click',function(e){
+                            e.preventDefault();
+    
+                            const $btn = $(this);
+                            const COID = $btn.data('order-id') || "TEST_ID_12345"; 
+                            
+                            
+                            $btn.prop('disabled', true).text('發送中...');
+                            
+
+                            
+                            $.ajax({
+                                url: 'https://jsonplaceholder.typicode.com/posts', 
+                                method: 'POST',
+                                data: {
+                                    COID: COID
+                                },
+                                success: function(response) {
+                                    
+                                    
+                                    
+                                    alert(`【線上測試成功】訂單編號為: ${response.COID}`);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('【測試失敗】:', error);
+                                    alert('連線測試失敗！');
+                                },
+                                complete: function() {
+                                    
+                                    $btn.prop('disabled', false).text('重試');
+                                    
+                                }
+                            });
+                            
+                        });
+                    }
+                });
+            }
+            
+            
+        }
+
+        
+        function appendElement_Input(ele, name, value) {
+            var inputHtml = `<input type="hidden" id='${name}' name="${name}" value='${value}' />`;
+            $(ele).append(inputHtml);
+            
+        }
+        
+        function formatTime(tt) {
+            if (!tt) return ''
+            const [datePart, timePart] = tt.split(' ')
+            const timePartFormate = timePart ? timePart.split('.')[0] : ''
+
+            
+            return `<b>${datePart}</b> <b>${timePartFormate}</b>`
+        }
+        
+        function statusString(ss, orderId, isExcel = false) {
+            
+            var statusName = statusMap[ss] || "未知狀態";
+            
+            
+            if (isExcel) {
+                return statusName;
+            }
+
+            
+            var buttonHtml = "";
+            if (ss === "S" || ss === "F") {
+                buttonHtml = ` <button type="button" class="btn btn_blue_outline btn-retry" data-order-id="${String(orderId)}">重試</button>`;
+            }
+
+            return statusName + buttonHtml;
+        }
+    
+    
+    
+    
+    
+    
+    
+        
+        $(function() {
+            $('#date-range').daterangepicker({
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "separator": " ~ ",
+                    "applyLabel": "確定",
+                    "cancelLabel": "清除",
+                    "fromLabel": "開始日期",
+                    "toLabel": "結束日期",
+                    "customRangeLabel": "自定義區間",
+                    "daysOfWeek": ["日", "一", "二", "三", "四", "五",
+                        "六"
+                    ],
+                    "monthNames": ["一月", "二月", "三月", "四月", "五月",
+                        "六月", "七月", "八月", "九月", "十月", "十一月",
+                        "十二月"
+                    ],
+                    "firstDay": 0
+                },
+                "dateLimit": {
+                    "months": 1 
+                },
+                "startDate": moment().startOf('month'), 
+                "endDate": moment().endOf('month'),   
+                "maxDate": moment(),   
+                "opens": "right" 
+            }, function(start, end, label) {
+                
+                const startTimestamp = start.clone().startOf(
+                    'day').unix();
+
+                
+                const endTimestamp = end.clone().endOf('day')
+                    .unix();
+
+                
+                $('input[name=U_YMD_S]').val(startTimestamp);
+                $('input[name=U_YMD_E]').val(endTimestamp);
+            });
+
+            
+            $('#date-range').on('show.daterangepicker', function(ev, picker) {
+                if ($(window).width() < 768) {
+                    $('body').addClass('modal-open-picker');
+                }
+            });
+
+            $('#date-range').on('hide.daterangepicker', function(ev, picker) {
+                $('body').removeClass('modal-open-picker');
+            });
+
+            
+            $('.reset').on('click', function() {
+                setTimeout(() => {
+                    
+                    if ($('#date-range').data('daterangepicker')) {
+                        $('#date-range').data('daterangepicker').setStartDate(moment().startOf('month'));
+                        $('#date-range').data('daterangepicker').setEndDate(moment().endOf('month'));
+                    }
+                    resetInputMonthly(); 
+
+                    
+                    if (typeof cidPicker !== 'undefined' && cidPicker.removeActiveItems) {
+                        cidPicker.removeActiveItems();
+                        console.log("移除CID");
+                        
+                    }
+                    
+                    $('#status_TransTime').prop('disabled', false).prop('checked', true);
+
+                    
+                    validateForm();
+
+                }, 0);
+            });
+        });
+
+        
+        $(function() {
+            
+            const currentMonthStr = moment().format('YYYYMM'); 
+            $('#date-monthly').val(currentMonthStr);
+
+            
+            function updateTimestamps(val) {
+                if (!val) return;
+                if (val.length !== 6) return; 
+                const baseDate = moment(val, "YYYYMM");
+                if (!baseDate.isValid()) return;
+
+                const startTimestamp = baseDate.clone().startOf('month').unix();
+                const endTimestamp = baseDate.clone().endOf('month').unix();
+
+                $('input[name=U_YMD_S]').val(startTimestamp);
+                $('input[name=U_YMD_E]').val(endTimestamp);
+            }
+
+            
+            window.updateTimestamps = updateTimestamps; 
+
+            
+            $('#date-monthly').on('input', function() {
+                updateTimestamps($(this).val().trim());
+            });
+
+            
+            updateTimestamps(currentMonthStr);
+        });
+
+       function statusDateType(status) {
+            
+            if (!status) {
+                status = [];
+            }
+            
+
+            
+            
+            if (status.includes("U")) {
+                
+
+                
+                $('#status_CreateTime').prop('disabled', false).prop('checked', true).trigger('change');
+                
+                
+                $('#status_TransTime').prop('checked', false).prop('disabled', true);
+                
+                
+                $('#U_STATUS_DATE').val('C');
+
+            } else {
+                
+
+                
+                $('#status_TransTime').prop('disabled', false);
+                $('#status_CreateTime').prop('disabled', false);
+                
+                
+                $('#status_TransTime').prop('checked', true);
+                $('#status_CreateTime').prop('checked', false); 
+                
+                
+                $('#U_STATUS_DATE').val('T');
+            }
+        }
+
+        
+        
+        
+        let cidPicker, statusPicker;
+
+        
+        function checkPickers(isInit = false) {
+            const cidCount = cidPicker.getValue(true).length;
+            const statusCount = statusPicker.getValue(true).length;
+            const searchBtn = $('#search');
+
+            const cidContainer = $(cidPicker.passedElement.element).closest('.input_p99');
+            const statusContainer = $(statusPicker.passedElement.element).closest('.input_p99');
+
+            
+            if (!isInit) {
+                
+                if (cidCount === 0) {
+                    cidContainer.addClass('error_input');
+                    cidContainer.next('.error_msg').show();
+                } else {
+                    cidContainer.removeClass('error_input');
+                    cidContainer.next('.error_msg').hide();
+                }
+
+                
+                if (statusCount === 0) {
+                    statusContainer.addClass('error_input');
+                    statusContainer.next('.error_msg').show();
+                } else {
+                    statusContainer.removeClass('error_input');
+                    statusContainer.next('.error_msg').hide();
+                }
+            }
+
+            
+            if (cidCount === 0 || statusCount === 0) {
+                searchBtn.addClass('disabled').attr('disabled', true);
+            } else {
+                searchBtn.removeClass('disabled').removeAttr('disabled');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            cidPicker = new Choices('#cid-multiple', {
+                removeItemButton: true,
+                allowHTML: true,
+                placeholder: true, 
+                placeholderValue: '＋選取CID', 
+                searchPlaceholderValue: '搜尋...',
+                noChoicesText: '...' 
+            });
+            const u_cid = $('input[name=U_CID]');
+            let u_cidArray = [];
+            
+            cidPicker.passedElement.element.addEventListener('change', function(event) {
+                const selectedCid = cidPicker.getValue(true);
+                u_cidArray = [...selectedCid];
+                u_cid.val(JSON.stringify(u_cidArray));
+
+                
+                checkPickers();
+                
+                validateForm(false, 'choices');
+            });
+
+            
+            statusPicker = new Choices('#status-multiple', {
+                removeItemButton: true,
+                allowHTML: true,
+                placeholder: true, 
+                placeholderValue: '＋選取交易狀態', 
+                searchPlaceholderValue: '搜尋...',
+                noChoicesText: '...' 
+            });
+
+            const u_status = $('input[name=U_STATUS]');
+            let u_statusArray = [];
+            
+            statusPicker.passedElement.element.addEventListener('change', function(event) {
+                const selectedStatus = statusPicker.getValue(true);
+                u_statusArray = [...selectedStatus];
+                u_status.val(JSON.stringify(u_statusArray));
+
+                statusDateType(selectedStatus);
+                
+                
+                checkPickers();
+
+                validateForm(false, 'choices');
+
+                
+            });
+
+            
+            checkPickers(true);
+
+            
+            const paymentForm = document.querySelector('.form-payment');
+
+            
+            
+            
+            
+            
+
+            
+            
+
+            
+            
+            
+            
+            
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        });
+
+        
+        $(function() {
+            $('input[name="searchType"], input[name="searchDate"]').on('change', function() {
+                searchItemOpen();
+                resetInputMonthly();
+            });
+            $('input[name="statusDateType"]').on('change',function(){
+                const typeVal=$(this).val();
+                $('#U_STATUS_DATE').val(typeVal);
+            });
+
+        });
+       
+        
+        function resetInputMonthly(){
+                    
+                    const currentMonthStr = moment().format('YYYYMM'); 
+                    $('#date-monthly').val(currentMonthStr);
+
+                    
+                    updateTimestamps(currentMonthStr);
+
+                    
+
+                    
+                    
+                    
+                    searchItemOpen();
+        }
+        
+        
+        function clearResults() {
+            const resultsSection = $('.results_area')
+            if (!resultsSection) return
+
+            
+            resultsSection.hide()
+
+            
+            
+            const tbody = document.getElementById('result-tbody')
+            if (tbody) {
+                tbody.innerHTML = ''
+            }
+
+            
+            const countText = document.querySelector('.results_header span')
+            if (countText) {
+                countText.innerText = '查詢結果：共 0 筆資料'
+            }
+        }
+        
+        
+        
+        
+        function initRadioStorage(radioName, storageKey) {
+            
+            let savedId = localStorage.getItem(storageKey);
+            
+            if (savedId) {
+                $('#' + savedId).prop('checked', true);
+            }else{
+                localStorage.setItem('selectedSearchTypeId', 'type01');
+                localStorage.setItem('selectedSearchDateId', 'date01');
+                searchItemOpen();
+            }
+
+            $('input[name="' + radioName + '"]').on('change', function() {
+                let currentId = $(this).attr('id');
+                if (currentId) {
+                    localStorage.setItem(storageKey, currentId);
+                }
+            });
+
+            $('form').on('submit', function() {
+                let currentCheckedId = $('input[name="' + radioName + '"]:checked').attr('id');
+                if (currentCheckedId) {
+                    localStorage.setItem(storageKey, currentCheckedId);
+                }
+            });
+
+        }
+
+        
+        
+        
+
+        $('#type02').on('change', function() {
+            validateForm(false, 'coid', true);
+            
+        });
+
+        
+
+
+        
+        const CidValidator = {
+            isValid() {
+                const cidVal = cidPicker.getValue(true);
+                
+                return Array.isArray(cidVal) ? cidVal.length > 0 : (cidVal && cidVal.trim() !== "");
+            },
+            checkUI(isInit) {
+                if (isInit) return;
+                
+                
+                const cidContainer = $(cidPicker.passedElement.element).closest('.input_p99');
+                
+                if (!this.isValid()) {
+                    cidContainer.addClass('error_input').next('.error_msg').show();
+                } else {
+                    cidContainer.removeClass('error_input').next('.error_msg').hide();
+                }
+            }
+        };
+
+        
+        const StatusValidator = {
+            isValid() {
+                const statusVal = statusPicker.getValue(true);
+                
+                return Array.isArray(statusVal) ? statusVal.length > 0 : (statusVal && statusVal.trim() !== "");
+            },
+            checkUI(isInit) {
+                if (isInit) return;
+                
+                const statusVal = statusPicker.getValue(true);
+                
+                const statusCount = Array.isArray(statusVal) ? statusVal.length : (statusVal ? 1 : 0);
+                console.log("status數量", statusCount);
+                
+                const statusContainer = $(statusPicker.passedElement.element).closest('.input_p99');
+
+                if (!this.isValid()) {
+                    statusContainer.addClass('error_input').next('.error_msg').show();
+                } else {
+                    statusContainer.removeClass('error_input').next('.error_msg').hide();
+                }
+            }
+        };
+
+        
+        const MonthlyValidator = {
+            $input: $('#date-monthly'),
+            $error: $('#ERR_MONTHLY'),
+            get $wrapper() { return this.$input.parents('.input_p99'); },
+            regex: /^\d{4}(0[1-9]|1[0-2])$/,
+
+            isValid() {
+                return this.regex.test(this.$input.val().trim());
+            },
+            checkUI(isInit) {
+                if (isInit) return;
+                if (this.isValid()) {
+                    this.$error.css('display', 'none').text('');
+                    this.$wrapper.removeClass('error_input');
+                } else {
+                    this.$error.css('display', 'flex').text('請輸入正確的查詢月份格式，例如：202606 (純數字，4碼西元年+2碼月份)');
+                    this.$wrapper.addClass('error_input');
+                }
+            }
+        };
+
+        
+        const CoidValidator = {
+            $input: $('#U_COID'),
+            $error: $('#ERR_COID'),
+            get $wrapper() { return this.$input.parents('.input_p99'); },
+
+            isValid() {
+                const isCoidEmpty = this.$input.val().trim() === "";
+                const isType02Checked = $('#type02').is(':checked');
+                
+                if (isCoidEmpty && !isType02Checked) {
+                    return false;
+                }
+                return true;
+            },
+            checkUI(isInit, isBlur = false) {
+                if (isInit) return;
+                
+                const isValid = this.isValid();
+
+                if (isValid) {
+                    
+                    this.$error.css('display', 'none').text('');
+                    this.$wrapper.removeClass('error_input');
+                } else if (isBlur) { 
+                    
+                    this.$error.css('display', 'flex').text('請輸入您要查詢的COID');
+                    this.$wrapper.addClass('error_input');
+                }
+            }
+        };
+
+        
+        function validateForm(isInit = false, triggerField = null, isBlur = false) {
+            
+            
+            const isType02 = $('#type02').is(':checked');
+
+            
+            if (isType02) {
+                
+                if (triggerField === 'cid') CidValidator.checkUI(isInit);
+                if (triggerField === 'status') StatusValidator.checkUI(isInit);
+                if (triggerField === 'monthly') MonthlyValidator.checkUI(isInit);
+                
+                
+                if (isInit || triggerField === null) {
+                    CidValidator.checkUI(isInit);
+                    StatusValidator.checkUI(isInit);
+                    MonthlyValidator.checkUI(isInit);
+                    
+                    
+                    $('.coid-container').removeClass('error_input').next('.error_msg').hide(); 
+                }
+                
+            } else {
+                
+                if (triggerField === 'cid') CidValidator.checkUI(isInit);
+                if (triggerField === 'coid') CoidValidator.checkUI(isInit, isBlur);
+                
+                
+                if (isInit || triggerField === null) {
+                    CidValidator.checkUI(isInit);
+                    CoidValidator.checkUI(isInit, true);
+                    
+                    
+                    $(statusPicker.passedElement.element).closest('.input_p99').removeClass('error_input').next('.error_msg').hide();
+                    $('.monthly-container').removeClass('error_input').next('.error_msg').hide(); 
+                }
+            }
+
+            
+            let isAllValid = false;
+
+            if (isType02) {
+                
+                const isCidValid = CidValidator.isValid();
+                const isStatusValid = StatusValidator.isValid();
+                const isMonthlyValid = MonthlyValidator.isValid();
+                isAllValid = isCidValid && isStatusValid && isMonthlyValid;
+                
+            } else {
+                
+                const isCidValid = CidValidator.isValid();
+                const isCoidValid = CoidValidator.isValid();
+                isAllValid = isCidValid && isCoidValid;
+            }
+
+            
+            const searchBtn = $('#search');
+            if (isAllValid) {
+                searchBtn.removeClass('disabled').removeAttr('disabled');
+            } else {
+                searchBtn.addClass('disabled').attr('disabled', true);
+            }
+        }
+
+        
+
+        
+        MonthlyValidator.$input.on('input blur', function() {
+
+            validateForm(false, 'monthly');
+            
+            
+            
+            
+            
+        });
+
+        
+        CoidValidator.$input.on('input', function() {
+            validateForm(false, 'coid', false); 
+        });
+
+        CoidValidator.$input.on('blur', function() {
+            validateForm(false, 'coid', true);  
+        });
+
+        
+        function searchItemOpen(){
+            if ($('#type02').is(':checked')) {
+                $('.hideA').fadeIn(300);
+                $('.hideB').hide();
+                $('.hideDateB').hide();
+                $('#U_STATUS_DATE').val('T');
+                $('#search').removeClass('disabled').attr('disabled',false);
+                $('#U_COID').val('');
+                if(u_status_Dafult.length===0){
+                    console.log("沒有交易狀態",u_status_Dafult.length);
+                    $('#U_STATUS').val(JSON.stringify(["S"]));
+                    statusPicker.setChoiceByValue('S');
+                }else{
+                    console.log("有交易狀態",u_status_Dafult.length);
+                    $('#U_STATUS').val(JSON.stringify(u_status_Dafult));
+                    u_status_Dafult.forEach(val => {
+                        statusPicker.setChoiceByValue(val);
+                    });
+
+                }
+                
+                
+                
+                validateForm(true);
+            }else{
+                $('.hideA').hide();
+                $('.hideB').fadeIn(300);
+                $('.hideDateB').hide();
+                $('input[name="U_YMD_S"]').val('');
+                $('input[name="U_YMD_E"]').val('');
+                $('input[name="U_STATUS"]').val('');
+                $('input[name="U_STATUS_DATE"]').val('');
+                if(u_status_Dafult.length>0){
+                    u_status_Dafult.forEach(val => {
+                        statusPicker.setChoiceByValue(val);
+                    });
+                }else{
+                    statusPicker.setChoiceByValue('S');
+                    
+                    
+                    
+                    
+                }
+                
+                
+                
+                
+            
+            validateForm(true);
+                
+            }
+            if ($('#date02').is(':checked')) {
+                $('.hideDateB').fadeIn(0);
+                $('.hideDateA').hide();
+            } else {
+                $('.hideDateA').fadeIn(300);
+                $('.hideDateB').hide(0);
+            }
+        }
+
+        
+        function searchData() {
+
+            
+            if ($('#type01').prop('checked')) {
+                
+                if (typeof COIDValidator !== 'undefined' && !COIDValidator.isValid()) {
+                    COIDValidator.showError();
+                    return false;
+                }
+            }
+            
+
+            
+            if (!MonthlyValidator.isValid()) {
+                MonthlyValidator.showError();
+                return false;
+            }
+            
+            
+            $.LoadingOverlay("show", {
+                image: "", 
+                custom: $("<div>", {
+                    class: "custom-spinner"
+                })[0],
+                background: "rgba(255,255,255,0.8)"
+            });
+            
+            document.getElementById('form').submit();
+
+            
+
+            
+            
+            
+        }
+
+    
+    
+    
+
+    
+    $(document).ready(function() {
+        
+        initRadioStorage('searchType', 'selectedSearchTypeId');
+        initRadioStorage('searchDate', 'selectedSearchDateId');
+        searchItemOpen();
+        
+        validateForm(true);
+    });
+    
+    
+
+    
+    function doit(type, fn) {
+        if (!DataReport || DataReport.length === 0) {
+            alert("目前沒有資料可供下載");
+            return;
+        }
+        
+        
+        const firstMID = DataReport[0] && DataReport[0].MID ? String(DataReport[0].MID) : '';
+
+        
+        const excelRows = DataReport.map((item, i) => {
+            return {
+                "NO.": i + 1, 
+                "MID": String(item.MID) || '-',
+                "CID": String(item.CID) || '-',
+                "CID_NAME": String(item.CID_NAME) || '-',
+                "COID": String(item.COID) || '-',
+                "P99_COID": String(item.P99_COID) || '-',
+                "PAID": item.PAID || '-',
+                "PAID_NAME": item.PAID_NAME || '-',
+                "CUID": item.CUID,
+                "Amount": item.AMOUNT, 
+                "Status": statusString(item.PAY_STATUS, item.COID, true),
+                "PRODUCT_ID": item.PRODUCT_ID || '-',
+                "PRODUCT_NAME": item.PRODUCT_NAME || '-',
+                "USER_ID": item.USER_ACCTID || '-',
+                "USER_IP": item.USER_IP || '-',
+                "TXTIME": item.TXTIME || '-',
+                "Create Time": item.CreateTime_at_Create || '-',
+                "Transaction Time": item.CreateTime_at_Transaction || '-',
+                "Refund Time": item.CreateTime_at_Refund || '-',
+                "REMARKS": item.REMARKS || '-'
+            };
+        });
+
+        
+        var ws = XLSX.utils.json_to_sheet(excelRows);
+
+        
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            
+            
+            for (let R = 1; R <= range.e.r; ++R) {
+                const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                if (ws[cellAddress]) {
+                    
+                    ws[cellAddress].t = 's';
+                    ws[cellAddress].z = '@';
+                    
+                    
+                    if (C === 9) { 
+                        ws[cellAddress].s = {
+                            alignment: {
+                                horizontal: 'right', 
+                                vertical: 'center'
+                            }
+                        };
+                    } else {
+                        ws[cellAddress].s = {
+                            alignment: {
+                                horizontal: 'center', 
+                                vertical: 'center'
+                            }
+                        };
+                    }
+                }
+            }
+
+            
+            
+            const headerAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+            if (ws[headerAddress]) {
+                ws[headerAddress].s = {
+                    fill: {
+                        patternType: 'solid',
+                        fgColor: { rgb: '5581C0' }
+                    },
+                    font: {
+                        bold: true,
+                        color: { rgb: 'ffffff' }
+                    },
+                    alignment: {
+                        horizontal: 'center',
+                        vertical: 'center'
+                    }
+                };
+            }
+        }
+
+        
+        if (ws['!ref']) {
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            const colsWidth = [];
+
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                let maxWidth = 10; 
+
+                for (let R = range.s.r; R <= range.e.r; ++R) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                    const cell = ws[cellAddress];
+
+                    if (cell && cell.v) {
+                        const cellValue = String(cell.v);
+                        let len = 0;
+                        for (let i = 0; i < cellValue.length; i++) {
+                            if (cellValue.charCodeAt(i) > 255) {
+                                len += 2; 
+                            } else {
+                                len += 1.1; 
+                            }
+                        }
+                        if (len > maxWidth) {
+                            maxWidth = len;
+                        }
+                    }
+                }
+                colsWidth.push({ wch: Math.ceil(maxWidth + 2) });
+            }
+            ws['!cols'] = colsWidth;
+        }
+
+        
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, firstMID || "Sheet1");
+        
+        const timestamp = Math.floor(Date.now() / 1000);
+        const fileName = fn || `${firstMID}_${timestamp}.${type || 'xlsx'}`;
+
+        XLSX.writeFile(wb, fileName);
+    }
+    
+ 
+    </script>
+    <script>
+        
+        
+
+        
+        
+    </script>
+</body>
+
+</html>

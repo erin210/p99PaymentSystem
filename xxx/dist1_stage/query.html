@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="google" content="notranslate" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<title>P99 Payment System</title>
+</script>
+<link rel="icon" href="./favicon.png">
+<link rel="icon" href="./favicon.ico">
+<script src="./assets/js/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="./assets/css/reset.css">
+<link rel="stylesheet" href="./assets/css/bootstrap-grid.css">
+<link rel="stylesheet" href="./assets/css/select2.min.css" />
+<link rel="stylesheet" href="./assets/css/wallet.css">
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/translate.js"></script>
+<script src="./assets/js/loadingoverlay.min.js"></script>
+<script src="./assets/js/jquery.sidr.min.js"></script>
+
+<link rel="stylesheet" href="./assets/css/choices.min.css" />
+
+<script src="./assets/js/choices.min.js"></script>
+<script>
+    function initFunction(jsonObj) {
+        renderInfo(jsonObj);
+    }
+</script>
+  
+</head>
+
+<body class="walletBody">
+  <header>
+    <div class="left">
+      <div class="logo imgbox">
+        <img src="./assets/img/p99_Logo.svg" alt="">
+      </div>
+      <h5>P99 Payment System</h5>
+      <h4 class="WL_TAB_HISTORY">訂單查詢</h4>
+    </div>
+
+    <div class="right">
+        <div id="langSelect" class="languageBox">
+            <img src="./assets/img/icon_Globe.svg" alt="" srcset="">
+            <span class="lang_text">語言</span>
+            <ul id="langListItem" class="langListItem">
+                <ul id="landList">
+                <li class="active">
+                    简中
+                </li>
+                <li>
+                    English
+                </li>
+                <li>
+                    日本語
+                </li>
+                <li>
+                    한국어
+                </li>
+                <li>
+                    Tiếng Việt
+                </li>
+                </ul>
+            </ul>
+        </div>
+        <div id="menu-toggle" class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    
+    
+
+</header>
+  <div id="apiWallet">
+
+    <main>
+
+      <aside id="sidr">
+
+        <nav  class="tabs">
+          <div class="tab tab2 active">
+            <a href="history">
+              <span class="imgbox tab_history">
+                <img src="./assets/img/icon_FileText.svg" alt="">
+              </span>
+              <h3><span class="WL_TAB_HISTORY">訂單查詢</span></h3>
+            </a>
+          </div>
+          <div class="tab tab4">
+            <a href="change_password">
+              <span class="imgbox tab_member">
+                <img src="./assets/img/icon_Settings.svg" alt="">
+              </span>
+              <h3><span class="WL_TAB_CHANGE_PASSWORD">設定</span></h3>
+            </a>
+          </div>
+        </nav>
+        <div class="user_box">
+          <div><span class="imgbox">
+              <img src="./assets/img/User.svg" alt="">
+            </span>
+            <span id="userID"></span>
+          </div>
+
+          <!-- <a href="logout" id="logOutBTN" class="WL_LOGOUT">登出</a> -->
+          <a href="login.html" id="logOutBTN" class="WL_LOGOUT">登出</a>
+        </div>
+      </aside>
+      <div class="tab_container">
+        <!-- <h4 class="WL_TAB_HISTORY">訂單查詢</h4> -->
+        <!-- tab_content op-->
+        <div class="tab_content querys_area">
+          <form class="form-payment" onsubmit="return check_submit();">
+            <div class="form_list">
+                <div class="input_group">
+                    <div class="input_p99 input_sm">
+                        <label for="">MID</label>
+                        <input type="text" value="M2000156" placeholder="" readonly disabled>
+                    </div>
+                    <div class="input_p99 input_lg">
+                       <label for="cid-multiple">CID</label>
+                       <div class="inner_group">
+                            <select
+                            class="form-control"
+                            name="cid-multiple"
+                            id="cid-multiple"
+                            multiple>
+                            <!-- <option value="" placeholder>＋選取CID</option> -->
+                            <!-- <option value="all">全部</option> -->
+                            <option value="C001560000156" selected>C001560000156</option>
+                            <option value="C001560000157" selected>C001560000157</option>
+                        </select>
+                        <!-- <button type="reset">Reset</button> -->
+                       </div>
+                    </div>
+                </div>
+                <div class="input_group">
+                    <div class="input_p99 input_sm">
+                        <label for="">查詢月份</label>
+                        <select required name="" id="">
+                            <option value="" disabled selected hidden>選取查詢月份</option>
+                            <option value="202603">202603</option>
+                            <option value="202602">202602</option>
+                            <option value="202601">202601</option>
+                        </select>
+                    </div>
+                    <div class="input_p99 input_lg">
+                       <label for="status-multiple">交易狀態</label>
+                       <div class="inner_group">
+                            <select
+                                class="form-control"
+                                name="status-multiple"
+                                id="status-multiple"
+                                multiple>
+                                <!-- <option value="" placeholder>＋選取交易狀態</option> -->
+                                <!-- <option value="all">全部</option> -->
+                                <option value="成功單" selected>成功單</option>
+                                <option value="失敗單">失敗單</option>
+                                <option value="調退單">調退單</option>
+                            </select>
+                            <!-- <button type="reset">Reset</button> -->
+                       </div>
+                        
+                    </div>
+                </div>
+                <div class="input_group">
+                    <button type="button" id="search" class="btn btn_blue" onclick="searchData()"><img src="./assets/img/icon_Search.svg" alt="">查單</button>
+                    <!-- <a id="search" href="query">清除</a> -->
+                    <button class="btn btn_blue_outline" type="reset" style="width: 5em;">清除</button>
+                </div>
+                
+            </div>
+          </form>
+        </div>
+        <!-- tab_content ed-->
+        <!-- tab_content op-->
+        <div class="tab_content results_area">
+          <div class="form-payment">
+            <h5>查詢結果</h5>
+            <div class="top_tools">
+              <p>共 <span id="dataNN"></span> 筆資料</p>
+              <button type="button" href="logout" id="logOutBTN" class="btn btn_blue_outline"><img src="./assets/img/icon_Download.svg" alt="">下載</button>
+            </div>
+            <div class="history_list">
+              <div class="list_PC">
+                <table id="historyTable">
+                </table>
+                <div class="dataEmpty" style="display: none;">
+                  <img src="./assets/img/no_data.svg" alt="">
+                  <b class="WL_HISTORY_INFO_EMPTY"></b>
+                </div>
+              </div>
+              <div class="list_M" id="listArea">
+                <div class="dataEmpty" style="display: none;">
+                  <img src="./assets/img/no_data.svg" alt="">
+                  <b class="WL_HISTORY_INFO_EMPTY"></b>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- <div id="pagination" class="pagination">
+            <button type="button" id="prev" class="prev">
+              <img id="prev_img" src="./assets/img/icon_prev_arrow.svg" alt="">
+            </button>
+            <div id="page" class="page"></div>
+            <button type="button" id="next" class="next">
+              <img id="next_img" src="./assets/img/icon_next_arrow.svg" alt="">
+            </button>
+          </div> -->
+        </div>
+        <!-- tab_content ed-->
+
+
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // $(function () {
+    //     $('base').attr('href', apiUrl);
+    // });
+    // if (!activeTab == null) {
+    //         switchTab(activeTab);
+    //     }
+
+
+    function renderInfo(json) {
+      $('#userID').text(json.U_EMAIL);
+      const dataNN=json.Transaction_Report.length;
+      console.log(dataNN);
+      $('#dataNN').text(dataNN);
+      
+
+      const historyDATA = json.Transaction_Report; // 這裡就是一頁的資料
+      // console.log("收到的資料：", historyDATA);
+
+      // 排序-新到舊
+    //   historyDATA.sort((a, b) => new Date(b.CreateTime_at) - new Date(a.CreateTime_at));
+
+      // 清空表格跟列表
+      $('#historyTable').empty();
+      $('#listArea').empty();
+
+      // === PC table =====================================================
+      const tableTH = `<tr class="list_th">
+                        <th class="acc_CustomerName">客戶名稱</th>
+                        <th class="acc_PAID_NAME">PAID</th>
+                        <th class="acc_C_COID">COID</th>
+                        <th class="acc_PAY_STATUS">交易狀態</th>
+                        <th class="acc_PRODUCT_ID">商品編號</th>
+                        <th class="acc_PRODUCT_NAME">商品名稱</th>
+                        <th class="acc_USER_ACCTID">ACC</th>
+                        <th class="acc_date">交易日期</th>
+                        <th class="acc_CUID">CUID</th>
+                        <th class="acc_AMOUNT">金額</th>
+                    </tr>
+                    <tr style="height: 10px;"></tr>`;
+      $('#historyTable').append(tableTH);
+
+      historyDATA.forEach(item => {
+        const dateFormat = formatTime(item.TransTime);
+        // const amountHTML = formatAmount(item.AMOUNT_ADD_USE);
+
+
+        const tableHTML = `<tr>
+                            <td class="acc_CustomerName">${item.CustomerName}</td>
+                            <td class="acc_PAID_NAME">${item.PAID_NAME}</td>
+                            <td class="acc_C_COID">${item.C_COID}</td>
+                            <td class="acc_PAY_STATUS">${item.PAY_STATUS}</td>
+                            <td class="acc_PRODUCT_ID">${item.PRODUCT_ID}</td>
+                            <td class="acc_PRODUCT_NAME">${item.PRODUCT_NAME}</td>
+                            <td class="acc_USER_ACCTID">${item.USER_ACCTID ? item.USER_ACCTID : "-"}</td>
+                            <td class="acc_date">${dateFormat}</td>
+                            <td class="acc_CUID">${item.CUID}</td>
+                            <td class="acc_AMOUNT">${item.AMOUNT}</td>
+                        </tr>`;
+        $('#historyTable').append(tableHTML);
+      });
+
+      // === M list =====================================================
+      const groupedData = groupByYearMonth(historyDATA);
+      if (Object.keys(groupedData).length === 0) {
+        $('.dataEmpty').show();
+        $('.pagination').hide();
+      } else {
+        $('.dataEmpty').hide();
+        $('.pagination').show();
+      }
+
+      Object.keys(groupedData).forEach(key => {
+        const listTitle_HTML = `
+                            <h5>${key}</h5>
+                            <ul id="listDATA${key}"></ul>`;
+        $('#listArea').append(listTitle_HTML);
+
+        groupedData[key].forEach(item => {
+          const amountHTML = item.AMOUNT;
+          const dateHTML = formatTime(item.TransTime).substring(5);
+          const listINFO_HTML = `<li>
+                                <div class="list_head">
+                                    <div>
+                                        <span class="list_text_left acc_PRODUCT_NAME">${item.PRODUCT_NAME}</span>
+                                        <span class="list_text_right">
+                                            <i class="imgbox">
+                                                <img src="./assets/img/icon_dropdown.svg" alt="">
+                                            </i>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="list_text_left acc_date">${dateHTML}</span>
+                                        <span class="list_text_right acc_AMOUNT">${item.CUID}<b>${amountHTML}</b></span>
+                                    </div>
+                                </div>
+                                <div class="list_content">
+                                    <div>
+                                        <span class="list_text_left">商品編號</span>
+                                        <span class="list_text_right">${item.PRODUCT_ID}</span>
+                                    </div>
+                                    <div>
+                                        <span class="list_text_left">客戶名稱</span>
+                                        <span class="list_text_right">${item.CustomerName}</span>
+                                    </div>
+                                    <div>
+                                        <span class="list_text_left">PAID</span>
+                                        <span class="list_text_right">${item.PAID_NAME}</span>
+                                    </div>
+                                    <div>
+                                        <span class="list_text_left">COID</span>
+                                        <span class="list_text_right">${item.C_COID}</span>
+                                    </div>
+                                    <div>
+                                        <span class="list_text_left">交易狀態</span>
+                                        <span class="list_text_right">${item.PAY_STATUS}</span>
+                                    </div>
+                                    <div>
+                                        <span class="list_text_left">ACC</span>
+                                        <span class="list_text_right">${item.USER_ACCTID ? item.USER_ACCTID : "-"}</span>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </li>`;
+          $('#listDATA' + key).append(listINFO_HTML);
+        });
+      });
+
+      $('.list_head').on('click', function() {
+        $(this).find('.imgbox').toggleClass('rotate');
+        $(this).siblings('.list_content').toggleClass('show');
+      });
+
+      //判斷-正數/負數
+      function formatAmount(amount) {
+        // const this_amount=Number(amount);
+        if (amount.charAt(0) !== '-') {
+          return `<i class="icon account_add"><img src="./assets/img/icon_account_add.svg" alt=""></i><b>${formatCurrency(Number(amount))}</b>`;
+        } else {
+          const positive = Number(amount.replace('-', '')); // 去掉負號
+          return `<i class="icon account_deduct"><img src="./assets/img/icon_account_deduct.svg" alt=""></i><b>${formatCurrency(positive)}</b>`;
+        }
+      }
+
+      //日期格式
+      function groupByYearMonth(data) {
+        const grouped = {};
+        data.forEach(item => {
+          const [year, month] = item.TransTime.split('-');
+          const key = `${year}-${month}`;
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push(item);
+        });
+        return grouped;
+      }
+      //日期＋時間 格式
+      function formatTime(tt) {
+        const [datePart, timePart] = tt.split(" ");
+        const timePartFormate = timePart ? timePart.split(".")[0] : "";
+        return `<b>${datePart}</b> <b>${timePartFormate}</b>`;
+      }
+      //千元標註
+      function formatCurrency(number) {
+        // 確保 number 是一個整數
+        if (!Number.isInteger(number)) return null;
+
+        // 將整數轉成字串，並利用正規表達式添加逗號
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      // 顯示頁碼
+      renderPagination(parseInt(json.PAGE_COUNT), parseInt(json.PAGE_SELECT));
+      initTranslation(json) //翻譯
+    }
+
+    
+    //查詢區塊===========================================================
+    $('.results_area').hide();
+    function searchData() {
+        // 1. 先執行驗證 (原本你可能寫在 cancel_submit 裡的)
+        // const cidValue = document.getElementById('cid-simple').value;
+        // if (!cidValue) {
+        //     alert("請先選擇 CID");
+        //     return; // 結束函式，不往下執行
+        // }
+        // alert("000")
+
+        // 2. 顯示表格區塊
+       $('.results_area').fadeIn(300);
+
+        // 3. 執行後續的 API 呼叫或資料載入
+        console.log("資料載入中...");
+    }
+    //清除結果區塊
+    function clearResults() {
+        const resultsSection = $('.results_area');
+        if (!resultsSection) return;
+
+        // A. 隱藏整個區塊
+        resultsSection.hide();
+
+        // B. 清空表格內容 (避免下次搜尋時舊資料閃現)
+        // 假設你的表格 body ID 是 'result-tbody'
+        const tbody = document.getElementById('result-tbody');
+        if (tbody) {
+            tbody.innerHTML = ''; 
+        }
+
+        // C. 如果有顯示「共 1256 筆資料」的文字，也把它歸零
+        const countText = document.querySelector('.results_header span');
+        if (countText) {
+            countText.innerText = '查詢結果：共 0 筆資料';
+        }
+    }
+    //清除設定處理-----
+    let cidPicker, statusPicker;
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化 CID
+        cidPicker = new Choices('#cid-multiple', {
+            removeItemButton: true,
+            allowHTML: true,
+            placeholder: true, // 啟用提示
+            placeholderValue: '＋選取CID', // 在這裡定義文字
+            searchPlaceholderValue: '搜尋...'
+        });
+
+        // 初始化 交易狀態
+        statusPicker = new Choices('#status-multiple', {
+            removeItemButton: true,
+            allowHTML: true,
+            placeholder: true, // 啟用提示
+            placeholderValue: '＋選取交易狀態', // 在這裡定義文字
+            searchPlaceholderValue: '搜尋...'
+        });
+
+        // --- 清除功能開始 ---
+        const paymentForm = document.querySelector('.form-payment');
+
+        paymentForm.addEventListener('reset', function(e) {
+            // 使用 setTimeout 確保在瀏覽器執行原生 reset 之後才執行 Choices 的清除
+            setTimeout(() => {
+                // 清除 CID 的 Choices 介面
+                cidPicker.removeActiveItems(); // 移除所有已選標籤
+                cidPicker.setChoiceByValue(''); // 回到預設 Placeholder
+
+                // 清除 交易狀態 的 Choices 介面
+                statusPicker.removeActiveItems();
+                statusPicker.setChoiceByValue('');
+
+                // 如果有隱藏的結果區塊，也順便藏起來
+                const resultsSection = document.getElementById('results-section');
+                if (resultsSection) {
+                    resultsSection.style.display = 'none';
+                }
+                // 執行清空結果畫面
+                clearResults();
+                
+                console.log("所有欄位已重置");
+            }, 0);
+        });
+    });
+
+    // ===讀取當頁內容===
+    function loadPage(page) {
+      
+
+      const url = `./history?page=${page}&json=1`;
+
+      fetch(url).then(res => {
+          if (!res.ok) throw new Error(res.status);
+          return res.text();
+        })
+        .then(html => {
+          //抓JSON格式
+          const $temp = $("<div>").html(html);
+          const scriptText = $temp.find("script").text();
+          const jsonText = scriptText.match(/initFunction\(([\s\S]*)\);/)[1];
+          const data = JSON.parse(jsonText);
+
+          $('.history_list').fadeOut(200, function() {
+            // 重新解析資料
+            renderInfo(data);
+            $(this).fadeIn(200);
+          });
+
+          // 滾動效果
+          $('.scroll_bg').animate({
+            scrollTop: 0
+          }, 300);
+          $('.container').animate({
+            scrollTop: 0
+          }, 300);
+
+        })
+        .catch(err => {
+          if (xhr.status === 401) {
+            alert("請先登入！");
+            window.location.href = "login";
+          } else {
+            alert("資料載入失敗，請稍後再試");
+          }
+        });
+    }
+
+    //計算頁碼
+    function renderPagination(PAGE_COUNT, PAGE_SELECT) {
+      const $pageDiv = $("#page");
+      $pageDiv.empty();
+
+      // 如果總頁數小於等於 1，通常隱藏分頁列或不渲染
+    if (PAGE_COUNT <= 1) {
+        $("#pagination").hide(); 
+        return;
+    } else {
+        $("#pagination").show();
+    }
+
+      const MAX_DISPLAY = 5; // 每次顯示的頁碼數量
+      let startPage = Math.floor((PAGE_SELECT - 1) / MAX_DISPLAY) * MAX_DISPLAY + 1;
+      let endPage = Math.min(startPage + MAX_DISPLAY - 1, PAGE_COUNT);
+
+        // 左箭頭 (#prev) - 跳回上一組的第一頁
+        const $prevBtn = $("#prev");
+        $prevBtn.prop("disabled", startPage === 1);
+        $prevBtn.off("click").on("click", () => {
+            if (startPage > 1) {
+            let newPage = startPage - 1; // 跳到前一組最後一頁
+            loadPage(newPage); 
+            }
+        });
+
+        // 右箭頭 (#next) - 跳到下一組的第一頁
+        const $nextBtn = $("#next");
+        $nextBtn.prop("disabled", endPage === PAGE_COUNT);
+        $nextBtn.off("click").on("click", () => {
+            if (endPage < PAGE_COUNT) {
+            let newPage = endPage + 1; // 跳到下一組第一頁
+            loadPage(newPage);
+            }
+        });
+
+      // 中間頁碼 (維持你原本的優秀寫法)
+        for (let i = startPage; i <= endPage; i++) {
+            const $span = $("<span>").text(i).addClass("pageLink");
+            if (i === PAGE_SELECT) $span.addClass("active");
+            $span.on("click", () => loadPage(i)); // 點擊數字跳到該頁
+            $pageDiv.append($span);
+        }
+    }
+  </script>
+
+  <script>
+    initFunction({
+    "Type": "transactionReport",
+    "U_EMAIL": "kiwi001",
+    "LanguageList": {
+    "en_US": "English",
+    "zh_TW": "\u4e2d\u6587",
+    "ja_JP": "日本語"
+    },
+    "StringID": {
+    "en_US": {
+        "WL_HISTORY_AMOUNT_ADD_USE": "Points Used",
+        "WL_HISTORY_AMOUNT_AFTER": "Points left",
+        "WL_HISTORY_CID_NAME": "Service",
+        "WL_HISTORY_COID": "Order ID",
+        "WL_HISTORY_DATE": "Date",
+        "WL_HISTORY_INFO_EMPTY": "No History Found",
+        "WL_HISTORY_PRODUCT_NAME": "Product",
+        "WL_TAB_CHANGE_PASSWORD": "Settings",
+        "WL_TAB_CHANGE_PAY_PASSWORD": "Payment Settings",
+        "WL_TAB_HISTORY": "ORDER INQUIRY",
+        "WL_TAB_HOME": "Overview",
+        "WL_LOGOUT": "LOGOUT"
+    },
+    "zh_TW": {
+        "WL_HISTORY_AMOUNT_ADD_USE": "交易點數",
+        "WL_HISTORY_AMOUNT_AFTER": "剩餘點數",
+        "WL_HISTORY_CID_NAME": "服務名稱",
+        "WL_HISTORY_COID": "訂單編號",
+        "WL_HISTORY_DATE": "交易日期",
+        "WL_HISTORY_INFO_EMPTY": "無交易歷史",
+        "WL_HISTORY_PRODUCT_NAME": "商品名稱",
+        "WL_TAB_CHANGE_PASSWORD": "設定",
+        "WL_TAB_CHANGE_PAY_PASSWORD": "交易設定",
+        "WL_TAB_HISTORY": "訂單查詢",
+        "WL_TAB_HOME": "總覽",
+        "WL_LOGOUT": "登出"
+    },
+    "ja_JP": {
+        "WL_HISTORY_DATE": "取引日時",
+        "WL_HISTORY_CID_NAME": "サービス名",
+        "WL_HISTORY_PRODUCT_NAME": "商品名 ",
+        "WL_HISTORY_COID": "注文番号",
+        "WL_HISTORY_AMOUNT_ADD_USE": "取引ポイント",
+        "WL_HISTORY_AMOUNT_AFTER": "残りポイント",
+        "WL_HISTORY_INFO_EMPTY": "取引履歴がありません",
+        "WL_TAB_HOME": "概要",
+        "WL_TAB_HISTORY": "注文検索",
+        "WL_TAB_CHANGE_PAY_PASSWORD": "設定",
+        "WL_TAB_CHANGE_PASSWORD": "設定",
+        "WL_TAB_TOPUP": "チャージ",
+        "WL_LOGOUT": "ログアウト"
+    }
+    },
+    "U_CID": "C001560000156,C001560000157",
+    "U_YMD_S": "1772294400",
+    "U_YMD_E": "1774972799",
+    "U_STATUS": "S,R",
+    "MID": "M2000156",
+    "CID": "[\"C001560000156\",\"C001560000157\"]",
+    "Transaction_Report": [
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000826400007",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "23.88",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 00:20:22.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000082689",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "6.92",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 00:33:07.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000826700000",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "14.82",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 00:35:06.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301082690000006",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "17.18",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 00:40:31.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000008270004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "31.13",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 00:52:40.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301082710000008",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "26.21",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 00:58:04.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301008272000002",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "1.87",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 01:26:17.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301082740000001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "1.57",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 01:43:46.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301082750000002",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "5.14",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 01:56:18.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000082789",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "20.22",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 02:24:16.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000082823",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "24.26",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 03:15:22.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000828400007",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "10.56",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 03:20:01.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000082856",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.46",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 04:14:00.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000829000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.98",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 05:32:48.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000082980001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "2.62",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 06:52:22.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301831200000002",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "18.86",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 08:29:33.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301083130000000",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "14.23",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 08:34:45.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083140007",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "32.93",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 08:36:25.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301083170000004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "15.72",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 09:09:38.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083180001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "20.22",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 09:14:03.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083220005",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "8.09",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 09:27:04.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000083289",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "22.24",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 11:30:16.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000083323",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "28",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 11:53:37.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083350008",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "29.95",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 12:01:16.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000008334008",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "14.67",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 12:01:25.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083360009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "4.49",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 12:04:46.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083370000",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "3.74",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 12:12:35.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000083456",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "30.25",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 13:09:57.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301083470000004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "22.74",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 13:36:34.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301834800000008",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "3.04",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 14:07:17.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000083501",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "7.34",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 14:39:44.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083560009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "9.58",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 15:14:33.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000836506",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.75",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 16:06:11.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301008369000009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "4.12",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 17:04:05.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301083720000009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "16.92",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 17:22:15.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000837405",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "34.59",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 17:40:11.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000083760009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "6.59",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 17:45:19.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000000837708",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "5.54",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 17:46:14.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301838200000002",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.23",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 18:06:47.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000008385009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.08",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 18:15:22.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260301000838700000",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "7.55",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-01 18:23:22.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303000000086579",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "5.24",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 00:50:26.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303008658000002",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "20.22",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 00:58:06.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303000000865903",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "4.49",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 01:00:59.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303086660000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "2.25",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 01:47:58.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303086690000006",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "44.47",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 02:06:10.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303000000867004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "9.51",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 02:25:37.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303008678000002",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "6.74",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 05:00:06.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260303000868000000",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "22.24",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-03 05:12:03.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260305000000921208",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "10.98",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-05 22:52:08.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260305000000092179",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "44.62",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-05 23:00:10.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000921906",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "12.73",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-05 23:04:21.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306092210000007",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "6.74",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-05 23:07:41.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306009230000006",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "7.34",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-05 23:44:27.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306923100000001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "2.1",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-05 23:54:07.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306923600000006",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "10.38",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 00:11:02.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000009247006",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "3.74",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 01:23:06.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306925300000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "14.82",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 01:59:43.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000092540001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.08",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 02:06:25.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306009255000001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "14.82",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 02:14:42.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000925805",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "9.34",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 02:54:27.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000092603",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "128.18",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 03:52:03.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000092614",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "339.3",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 04:40:59.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000092630000",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "61.6",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 05:16:34.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000926400004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "29.65",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 05:20:47.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000092700007",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "6.6",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 06:08:15.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000009275004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "2.83",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 07:29:55.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306092770000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "2.25",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 08:31:10.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000927906",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "15.65",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 08:43:46.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306928400000004",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "7.34",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 09:20:55.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000092858",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "13.33",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 09:28:23.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306928600000006",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "26.95",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 09:46:43.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306929300000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "18.78",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 10:24:54.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000092980005",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "21.71",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 11:02:26.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306009309000005",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "2.25",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 13:42:45.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306009313000009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "1.57",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 13:55:56.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000009320009",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "24.41",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 14:56:54.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000932209",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "11.08",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 15:08:06.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306933100000001",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "18.72",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 15:20:33.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000009329008",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "7.34",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 15:21:15.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306933300000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "22.31",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 15:28:29.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000009336005",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "3.86",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 15:32:46.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000934800008",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "53.76",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 16:15:48.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306000000093503",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "22.43",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 16:22:29.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306093510000007",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "43.05",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 16:25:20.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        },
+        {
+            "CustomerName": "NetFusion Technology",
+            "PAID_NAME": "VISA\/MasterCard \u4fe1\u7528\u5361 (EZ)",
+            "C_COID": "260306935300000003",
+            "PAY_STATUS": "\u6210\u529f\u55ae",
+            "CUID": "USD",
+            "AMOUNT": "22.43",
+            "PRODUCT_ID": "LIVE01",
+            "PRODUCT_NAME": "LIVE",
+            "USER_ACCTID": "",
+            "TransTime": "2026-03-06 16:28:30.000000",
+            "Reason": null,
+            "C_Settle_TIME": null
+        }
+    ]
+});
+  </script>
+</body>
+
+</html>
